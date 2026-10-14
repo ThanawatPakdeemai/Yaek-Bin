@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="th">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>สรุปบิลค่าอาหาร</title></head>
+<body style="margin:0;padding:24px 12px;background:#f5f6f2;color:#233d36;font-family:Arial,Tahoma,sans-serif">
+<table role="presentation" width="100%" style="max-width:580px;margin:0 auto;background:#ffffff;border:1px solid #e3e8e2;border-radius:16px;border-spacing:0">
+<tr><td style="padding:28px">
+<p style="font-size:22px;font-weight:bold;color:#276d57;margin:0 0 26px">÷ หารกัน</p>
+<p style="color:#76817b;font-size:12px;margin:0 0 8px">สรุปค่าอาหาร · {{bill_date}}</p>
+<h1 style="font-size:24px;line-height:1.5;margin:0 0 16px">{{bill_title}}</h1>
+<p style="font-size:14px;line-height:1.8">สวัสดี {{to_name}}<br>{{owner_name}} ส่งสรุปค่าอาหารส่วนของคุณมาให้แล้ว</p>
+<table role="presentation" width="100%" style="background:#edf5ef;border-radius:12px"><tr><td style="padding:22px;text-align:center"><p style="margin:0 0 8px;font-size:13px;color:#63806c">ยอดที่ต้องโอน</p><strong style="font-size:34px;line-height:1.4;color:#276d57">฿{{total_amount}}</strong></td></tr></table>
+<h2 style="font-size:16px;margin:25px 0 10px">รายการที่คุณร่วมจ่าย</h2>
+<table width="100%" style="border-collapse:collapse;font-size:13px">
+<thead><tr style="background:#f5f6f2"><th align="left" style="padding:10px;font-weight:normal">รายการ / จำนวน / คนหาร</th><th align="right" style="padding:10px;font-weight:normal">ส่วนของคุณ</th></tr></thead>
+<tbody>{{#items}}
+<tr><td style="padding:12px 10px;border-bottom:1px solid #edf0eb;line-height:1.8">{{name}}<br><span style="font-size:11px;color:#748179">{{quantity}} รายการ · รวม ฿{{line_total}} · หาร {{headcount}} คน</span></td><td align="right" style="padding:12px 10px;border-bottom:1px solid #edf0eb;white-space:nowrap">฿{{share}}</td></tr>
+{{/items}}</tbody></table>
+<table width="100%" style="font-size:13px;margin:16px 0;border-spacing:0 8px">
+<tr><td>ค่าอาหาร</td><td align="right">฿{{subtotal}}</td></tr>
+<tr><td>ส่วนลด</td><td align="right">−฿{{discount}}</td></tr>
+<tr><td>ค่าบริการ</td><td align="right">฿{{service}}</td></tr>
+<tr><td>VAT</td><td align="right">฿{{vat}}</td></tr>
+<tr style="font-weight:bold"><td style="padding-top:8px;border-top:1px solid #e3e8e2">ยอดสุทธิ</td><td align="right" style="padding-top:8px;border-top:1px solid #e3e8e2">฿{{total_amount}}</td></tr></table>
+<table role="presentation" width="100%" style="border-top:1px dashed #d8e0d7"><tr><td align="center" style="padding:22px 0">
+<h2 style="font-size:16px;margin:0 0 10px">สแกนพร้อมเพย์เพื่อโอน</h2>
+<img src="cid:qr_image" width="220" height="220" alt="QR พร้อมเพย์ยอด {{total_amount}} บาท" style="display:block;width:220px;height:220px;max-width:100%;margin:0 auto;border:0">
+<p style="font-size:14px;line-height:1.8">ผู้รับ: {{owner_name}}<br>พร้อมเพย์: {{promptpay_id}}</p>
+<p style="font-size:11px;color:#748179;line-height:1.8;margin:0">ตรวจสอบชื่อบัญชีและยอดเงินในแอปธนาคารก่อนยืนยันการโอน<br>QR นี้ไม่ได้ยืนยันสถานะการชำระเงิน</p>
+</td></tr></table>
+{{#note}}<p style="padding:16px;background:#f7f6f0;border-radius:10px;font-size:13px;line-height:1.8;white-space:pre-wrap">{{note}}</p>{{/note}}
+<p style="color:#748179;font-size:11px;line-height:1.8;margin-bottom:0">คำนวณเป็นสตางค์ ส่วนต่างจากการหารและปัดเศษอาจต่างกัน 0.01 บาท<br>หากรายการไม่ถูกต้อง กรุณาติดต่อเจ้าของบิลก่อนโอน</p>
+</td></tr></table>
+<p style="text-align:center;font-size:11px;color:#87908b;margin:18px 0">หารกัน · อิ่มด้วยกัน จ่ายส่วนของเรา</p>
+</body></html>
