@@ -4,26 +4,26 @@
 
 ## เริ่มใช้งานบนเครื่อง / Vercel
 
-ใช้ Node.js 22.13+ และ npm
+ใช้ Bun 1.4+ และ Node.js 22.13+
 
 ```bash
-npm ci
+bun install
 cp .env.example .env.local
-npm run dev
+bun run dev
 ```
 
 Windows: คัดลอก `.env.example` เป็น `.env.local` ด้วย File Explorer หรือ `Copy-Item .env.example .env.local` ใน PowerShell
 
 ```bash
-npm test
-npm run build
-npm start
+bun run test
+bun run build
+bun run start
 ```
 
-ชุดนี้เป็น Next.js สำหรับ Vercel โดยตรง ใช้ `npm run build` เพื่อสร้าง production build และ `vercel.json` ตั้งค่าไว้แล้ว
+ชุดนี้เป็น Next.js สำหรับ Vercel โดยตรง ใช้ `bun run build` เพื่อสร้าง production build และ `vercel.json` ตั้งค่าไว้แล้ว
 
 1. แตก ZIP และนำโฟลเดอร์ขึ้น GitHub ของคุณ (ห้าม commit .env.local)
-2. Import repository ใน Vercel เลือก Next.js; ใช้ Build Command `npm run build` และไม่กำหนด Output Directory เอง
+2. Import repository ใน Vercel เลือก Next.js; ใช้ Build Command `bun run build` และไม่กำหนด Output Directory เอง
 3. ตั้ง Environment Variables ตามรายการด้านล่างสำหรับ Production (และ Preview ถ้าต้องการ)
 4. Deploy / Redeploy หลังตั้ง env
 5. สร้างบิลทดสอบโดยใช้อีเมลของคุณเอง แล้วกดเรียกเก็บ ตรวจ EmailJS History และกล่องอีเมลว่ารายการ ยอด และภาพ QR ครบก่อนใช้กับเพื่อน
