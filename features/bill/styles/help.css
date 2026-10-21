@@ -14,15 +14,15 @@
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 .help-content h3 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   margin-bottom: 6px;
 }
 .help-content p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
   color: #869579;
 }
@@ -39,6 +39,6 @@
 }
 @media (max-width: 520px) {
   .help-content p {
-    font-size: 11px;
+    font-size: 12px;
   }
 }

@@ -17,7 +17,7 @@
 }
 body {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
 }
 button,
 input,
@@ -100,16 +100,16 @@ p {
   margin: 0;
 }
 small {
-  font-size: 11px;
+  font-size: 12px;
 }
 @media (max-width: 520px) {
   body {
-    font-size: 13px;
+    font-size: 14px;
   }
   input,
   textarea,
   select {
-    font-size: 16px !important;
+    font-size: 17px !important;
     padding: 10px 11px;
   }
 }

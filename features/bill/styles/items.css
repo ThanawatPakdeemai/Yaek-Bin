@@ -7,7 +7,7 @@
   align-items: center;
 }
 .menu-labels {
-  font-size: 9px;
+  font-size: 10px;
   color: #9aa598;
   background: #f7f8f4;
   margin: 0 -24px;
@@ -28,7 +28,7 @@
 }
 .item-number {
   font-family: Inter;
-  font-size: 9px;
+  font-size: 10px;
   color: #afb7aa;
   width: 14px;
   flex-shrink: 0;
@@ -36,7 +36,7 @@
 .menu-name input {
   border-color: transparent;
   padding: 9px 2px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   background: transparent;
 }
@@ -52,23 +52,23 @@
   left: 9px;
   top: 10px;
   color: #a3af9f;
-  font-size: 11px;
+  font-size: 12px;
 }
 .money-input input {
   font-family: Inter, sans-serif;
   padding: 9px 8px 9px 20px;
-  font-size: 11px;
+  font-size: 12px;
   text-align: right;
 }
 .quantity {
   padding: 9px 3px 9px 8px;
   font-family: Inter, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
 }
 .line-total {
   font-family: Inter;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-align: right;
   color: #536a56;
@@ -82,7 +82,7 @@
   padding-left: 22px;
 }
 .eater-label {
-  font-size: 9px;
+  font-size: 10px;
   color: #9aa598;
 }
 .person-checks {
@@ -95,7 +95,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 9px;
+  font-size: 10px;
   padding: 5px 8px;
   border: 1px solid #e6e9df;
   color: #a1aa9d;
@@ -138,19 +138,19 @@
 }
 .select-all {
   margin-left: auto;
-  font-size: 9px;
+  font-size: 10px;
 }
 .subtotal-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 21px 0 0;
-  font-size: 12px;
+  font-size: 13px;
   color: #6a7d6a;
 }
 .subtotal-row strong {
   font-family: Inter;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   color: #36583d;
 }
@@ -166,7 +166,7 @@
   list-style: none;
   cursor: pointer;
   color: #80947c;
-  font-size: 11px;
+  font-size: 12px;
 }
 .extras summary::-webkit-details-marker {
   display: none;
@@ -182,7 +182,7 @@
 }
 .extras-grid input {
   font-family: Inter;
-  font-size: 12px;
+  font-size: 13px;
 }
 .empty-menu {
   text-align: center;
@@ -194,11 +194,11 @@
   color: #bdc9b3;
 }
 .empty-menu h3 {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 .empty-menu p {
-  font-size: 11px;
+  font-size: 12px;
   margin-top: 6px;
 }
 @media (min-width: 1300px) {
@@ -249,7 +249,7 @@
     grid-row: 1;
   }
   .menu-name input {
-    font-size: 15px !important;
+    font-size: 16px !important;
     padding: 5px 3px;
   }
   .menu-main > .delete {
@@ -261,28 +261,28 @@
     grid-column: 1;
   }
   .money-input input {
-    font-size: 14px !important;
+    font-size: 15px !important;
     padding: 9px 10px 9px 22px;
   }
   .money-input > span {
     top: 10px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .quantity {
     grid-row: 2;
     grid-column: 2;
-    font-size: 14px !important;
+    font-size: 15px !important;
     padding: 9px 3px;
   }
   .line-total {
     grid-row: 2;
     grid-column: 3/5;
-    font-size: 13px;
+    font-size: 14px;
   }
   .line-total:before {
     content: "รวม ";
     font-family: "IBM Plex Sans Thai";
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 400;
     color: #9daa93;
   }
@@ -292,21 +292,21 @@
     gap: 7px;
   }
   .eater-label {
-    font-size: 9px;
+    font-size: 10px;
   }
   .person-check {
-    font-size: 10px;
+    font-size: 11px;
     padding: 6px 8px;
     min-height: 31px;
   }
   .select-all {
-    font-size: 9px;
+    font-size: 10px;
   }
   .extras-grid {
     gap: 8px;
   }
   .extras-grid .field > span {
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 .menu-labels,
