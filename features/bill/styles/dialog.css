@@ -1,0 +1,77 @@
+/* dialog: base styles, responsive rules, and readability overrides. */
+.modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  border: 1px solid #e3e9dc;
+  padding: 0;
+  width: min(610px, 92vw);
+  max-height: 90svh;
+  overflow: auto;
+  border-radius: 19px;
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 24px 100px #1c382630;
+}
+.modal::backdrop {
+  background: #263d3159;
+  backdrop-filter: blur(4px);
+}
+.modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 26px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  gap: 12px;
+}
+.modal-top h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.modal-body {
+  padding: 24px 26px;
+}
+.modal-body > p {
+  font-size: 12px;
+  color: #84907b;
+  line-height: 1.9;
+}
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+@media (max-width: 520px) {
+  .modal {
+    width: 94vw;
+    border-radius: 15px;
+    max-height: 94svh;
+  }
+  .modal-top {
+    padding: 20px 18px;
+  }
+  .modal-top h2 {
+    font-size: 18px;
+  }
+  .modal-body {
+    padding: 20px 18px;
+  }
+  .modal-actions {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .modal-actions .btn {
+    font-size: 11px;
+    padding: 11px 12px;
+    flex: 1;
+    white-space: nowrap;
+  }
+}

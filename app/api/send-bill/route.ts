@@ -1,4 +1,4 @@
-import { handleSend } from "@/lib/server-email";
+import { handleSend } from "@/features/bill-email/server/send-bill";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;

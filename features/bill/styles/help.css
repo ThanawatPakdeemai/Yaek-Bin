@@ -1,0 +1,44 @@
+/* help: base styles, responsive rules, and readability overrides. */
+.help-content > div:not(.privacy-note) {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 21px;
+}
+.help-content > div > span {
+  width: 28px;
+  height: 28px;
+  background: #edf4e5;
+  color: #819c6f;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+.help-content h3 {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.help-content p {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #869579;
+}
+.privacy-note {
+  display: flex;
+  gap: 11px;
+  background: #f3f6ee;
+  padding: 16px;
+  border-radius: 10px;
+}
+.privacy-note > svg {
+  flex-shrink: 0;
+  color: #8da57b;
+}
+@media (max-width: 520px) {
+  .help-content p {
+    font-size: 11px;
+  }
+}

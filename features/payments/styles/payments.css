@@ -1,0 +1,147 @@
+/* payments: base styles, responsive rules, and readability overrides. */
+.payment-fields {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 15px;
+}
+.payment-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f7f8f4;
+  border-radius: 9px;
+  padding: 14px;
+  margin: 17px 0 21px;
+  color: #8b9e84;
+}
+.payment-note > svg {
+  flex-shrink: 0;
+}
+.payment-note p {
+  font-size: 11px;
+  color: #758d6f;
+  line-height: 1.7;
+}
+.payment-note small {
+  display: block;
+  font-size: 9px;
+  color: #9aa795;
+  line-height: 1.8;
+  margin-top: 3px;
+}
+.person-amount {
+  background: #f0f5ea;
+  text-align: center;
+  border-radius: 12px;
+  padding: 19px;
+  color: #8aa477;
+}
+.person-amount > span {
+  font-size: 11px;
+}
+.person-amount strong {
+  display: block;
+  font-family: Inter;
+  font-size: 32px;
+  color: #547543;
+  margin: 7px 0;
+}
+.person-amount small {
+  font-size: 10px;
+}
+.personal-lines {
+  margin: 19px 0;
+}
+.personal-lines > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.personal-lines small {
+  display: block;
+  font-size: 9px;
+  color: #9aa58d;
+  margin-top: 5px;
+}
+.personal-lines b {
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 500;
+}
+.personal-lines > p {
+  font-size: 12px;
+  color: #8b9880;
+  padding: 18px 0;
+}
+.qr-area {
+  text-align: center;
+  padding: 20px 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+.payment-qr {
+  display: block;
+  width: 240px;
+  height: 240px;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 5px auto;
+}
+.promptpay-label {
+  font-family: Inter;
+  font-size: 20px;
+  color: #315879;
+  font-weight: 600;
+}
+.promptpay-label span {
+  font-family: "IBM Plex Sans Thai";
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  margin: 4px 0;
+}
+.qr-area p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #748b66;
+  margin-bottom: 15px;
+}
+.qr-area > small {
+  display: block;
+  font-size: 9px;
+  color: #95a388;
+  line-height: 1.8;
+  margin-top: 17px;
+}
+.qr-placeholder {
+  height: 240px;
+  display: grid;
+  place-items: center;
+  color: #90a881;
+}
+@media (max-width: 800px) {
+  .payment-fields {
+    grid-template-columns: 1fr 1.3fr;
+  }
+}
+@media (max-width: 520px) {
+  .payment-fields {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .payment-note {
+    padding: 12px;
+    gap: 9px;
+  }
+  .payment-note small {
+    font-size: 9px;
+  }
+}
+.payment-note small {
+  color: #7b8d6f;
+}
