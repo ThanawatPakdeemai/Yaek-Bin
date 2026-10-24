@@ -9,11 +9,11 @@
   color: #7d9181;
 }
 .card-mini-title h2 {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
 }
 .draft-tag {
-  font-size: 10px;
+  font-size: 12px;
   color: #929d92;
   background: #f2f4ee;
   border-radius: 4px;
@@ -37,5 +37,8 @@
   .bill-fields {
     grid-template-columns: 1fr;
     gap: 13px;
+  }
+  .draft-tag {
+    font-size: 11px;
   }
 }

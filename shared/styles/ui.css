@@ -74,7 +74,7 @@
 }
 .field > span {
   color: #67796c;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 .field > small {
@@ -110,7 +110,7 @@
   display: none;
 }
 .section-heading p {
-  font-size: 11px;
+  font-size: 13px;
   margin-top: 5px;
   color: #93a092;
 }
@@ -180,7 +180,7 @@
 }
 .quiet-note {
   color: #9aa598;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
   display: flex;
   gap: 6px;
@@ -203,7 +203,7 @@
   text-decoration: underline;
 }
 .inline-error {
-  font-size: 11px;
+  font-size: 12px;
   color: #b1634c;
   margin-top: 8px;
   line-height: 1.8;
@@ -259,12 +259,12 @@
     padding: 19px;
   }
   .section-heading p {
-    font-size: 10px;
+    font-size: 13px;
   }
 }
 @media (max-width: 800px) {
   .section-heading p {
-    font-size: 11px;
+    font-size: 13px;
   }
   .card {
     padding: 23px;
@@ -272,7 +272,7 @@
 }
 @media (max-width: 520px) {
   .eyebrow {
-    font-size: 9px;
+    font-size: 10px;
     letter-spacing: 1.3px;
   }
   .card {
@@ -283,7 +283,7 @@
     font-size: 14px;
   }
   .field > span {
-    font-size: 12px;
+    font-size: 14px;
   }
   .section-heading {
     gap: 9px;
@@ -293,7 +293,7 @@
     font-size: 17px;
   }
   .section-heading p {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1.6;
   }
   .section-icon {
@@ -314,7 +314,7 @@
     margin-top: 15px;
   }
   .quiet-note {
-    font-size: 10px;
+    font-size: 12px;
   }
   .config-note p {
     font-size: 11px;

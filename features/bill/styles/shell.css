@@ -127,7 +127,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
   color: #77897e;
@@ -186,7 +186,7 @@
   gap: 15px;
   margin-top: 30px;
   padding: 0 0 30px;
-  font-size: 10px;
+  font-size: 11px;
   color: #a5ad9c;
 }
 .footer > span {
@@ -200,7 +200,7 @@
   background: #d6ddcd;
 }
 .footer button {
-  font-size: 10px;
+  font-size: 11px;
 }
 .validation-box {
   margin-top: 22px;
@@ -323,7 +323,7 @@
     margin: 7px 0;
   }
   .welcome p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .welcome-mark {
     display: none;

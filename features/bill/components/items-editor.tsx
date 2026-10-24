@@ -91,7 +91,7 @@ export function ItemsEditor({
                   })
                 }
               >
-                <Trash2 size={15} />
+                <Trash2 size={15} color="#e5484d" />
               </button>
             </div>
             <div className="eaters">

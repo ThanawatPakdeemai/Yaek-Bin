@@ -7,7 +7,7 @@
   align-items: center;
 }
 .menu-labels {
-  font-size: 10px;
+  font-size: 12px;
   color: #9aa598;
   background: #f7f8f4;
   margin: 0 -24px;
@@ -35,7 +35,7 @@
 }
 .menu-name input {
   border-color: transparent;
-  padding: 9px 2px;
+  padding: 9px 4px;
   font-size: 13px;
   font-weight: 500;
   background: transparent;
@@ -82,7 +82,7 @@
   padding-left: 22px;
 }
 .eater-label {
-  font-size: 10px;
+  font-size: 12px;
   color: #9aa598;
 }
 .person-checks {
@@ -95,7 +95,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
+  font-size: 12px;
   padding: 5px 8px;
   border: 1px solid #e6e9df;
   color: #a1aa9d;
@@ -138,7 +138,7 @@
 }
 .select-all {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12px;
 }
 .subtotal-row {
   display: flex;
@@ -241,7 +241,7 @@
     padding: 17px 0;
   }
   .menu-main {
-    grid-template-columns: minmax(0, 1fr) 59px 75px 27px;
+    grid-template-columns: minmax(0, 1fr) 40px 75px 27px;
     gap: 8px;
   }
   .menu-name {
@@ -250,7 +250,7 @@
   }
   .menu-name input {
     font-size: 16px !important;
-    padding: 5px 3px;
+    padding: 5px 4px;
   }
   .menu-main > .delete {
     grid-column: 4;
@@ -292,15 +292,15 @@
     gap: 7px;
   }
   .eater-label {
-    font-size: 10px;
+    font-size: 12px;
   }
   .person-check {
-    font-size: 11px;
+    font-size: 12px;
     padding: 6px 8px;
     min-height: 31px;
   }
   .select-all {
-    font-size: 10px;
+    font-size: 12px;
   }
   .extras-grid {
     gap: 8px;

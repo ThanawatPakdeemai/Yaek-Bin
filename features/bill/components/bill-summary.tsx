@@ -90,7 +90,7 @@ export function BillSummary({
         คัดลอกสรุปบิล
       </button>
       <p className="rounding-note">
-        <Info size={13} />
+        <Info size={15} />
         หารเป็นสตางค์ ยอดแต่ละคนรวมตรงกับบิล ส่วนต่างจากการปัดเศษอาจต่างกัน 0.01
         บาท
       </p>

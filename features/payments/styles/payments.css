@@ -18,13 +18,13 @@
   flex-shrink: 0;
 }
 .payment-note p {
-  font-size: 12px;
+  font-size: 14px;
   color: #758d6f;
   line-height: 1.7;
 }
 .payment-note small {
   display: block;
-  font-size: 10px;
+  font-size: 12px;
   color: #9aa795;
   line-height: 1.8;
   margin-top: 3px;
@@ -139,7 +139,7 @@
     gap: 9px;
   }
   .payment-note small {
-    font-size: 10px;
+    font-size: 12px;
   }
 }
 .payment-note small {

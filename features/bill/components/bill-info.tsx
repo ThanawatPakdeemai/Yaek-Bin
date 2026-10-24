@@ -10,7 +10,7 @@ export function BillInfo({
   return (
     <section className="card bill-info">
       <div className="card-mini-title">
-        <ReceiptText size={17} />
+        <ReceiptText size={20} />
         <h2>บิลของเรา</h2>
         <span className="draft-tag">ฉบับร่าง</span>
       </div>

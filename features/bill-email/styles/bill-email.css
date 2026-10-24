@@ -15,13 +15,13 @@
   border-radius: 10px;
 }
 .email-feature h3 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: #879279;
   margin: 1px 0 7px;
 }
 .email-feature p {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.8;
   color: #a4ab97;
 }
@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 12px;
   margin-top: 10px;
   color: #b4a471;
 }

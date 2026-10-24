@@ -34,7 +34,8 @@
   margin: 19px 0;
 }
 .grand-total > span {
-  font-size: 11px;
+  font-size: 14px;
+  font-weight: 600;
   color: #85a077;
 }
 .grand-total strong {
@@ -53,7 +54,7 @@
   margin-right: 4px;
 }
 .grand-total p {
-  font-size: 10px;
+  font-size: 12px;
   color: #91a685;
   display: flex;
   align-items: center;
@@ -70,7 +71,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0 1px;
 }
 .summary-breakdown > div {
@@ -80,7 +81,7 @@
 }
 .summary-breakdown b {
   font-family: Inter;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: #6f8367;
 }
@@ -89,7 +90,7 @@
   margin: 19px 0;
 }
 .person-totals-title {
-  font-size: 12px;
+  font-size: 14px;
   color: #658059;
   font-weight: 500;
   margin-bottom: 9px;
@@ -111,7 +112,7 @@
   color: var(--green);
 }
 .person-total-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   flex: 1;
   min-width: 0;
@@ -119,14 +120,14 @@
 }
 .person-total-name small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: #a7b09e;
   font-weight: 400;
   margin-top: 4px;
 }
 .person-total strong {
   font-family: Inter;
-  font-size: 13px;
+  font-size: 14px;
   color: #526f47;
   font-weight: 600;
 }
@@ -142,12 +143,12 @@
   color: #628153;
 }
 .collect-total span {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
 }
 .collect-total small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: #a1af94;
   margin-top: 5px;
 }
@@ -159,14 +160,14 @@
 }
 .copy-button {
   width: 100%;
-  font-size: 11px;
+  font-size: 12px;
   padding: 9px;
 }
 .rounding-note {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 9px;
+  font-size: 11px;
   color: #a9b29f;
   line-height: 1.9;
   margin-top: 15px;
@@ -206,13 +207,13 @@
     font-size: 15px;
   }
   .person-total-name small {
-    font-size: 11px;
+    font-size: 12px;
   }
   .person-total strong {
     font-size: 15px;
   }
   .person-totals-title {
-    font-size: 13px;
+    font-size: 14px;
   }
   .collect-total strong {
     font-size: 21px;

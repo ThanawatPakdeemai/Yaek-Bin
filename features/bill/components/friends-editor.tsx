@@ -69,7 +69,7 @@ export function FriendsEditor({
               aria-label={`ลบ ${friend.name || "เพื่อน"}`}
               onClick={() => removeFriend(friend.id)}
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} color="#e5484d" />
             </button>
           </div>
         ))}
@@ -79,7 +79,7 @@ export function FriendsEditor({
         เพิ่มเพื่อนร่วมโต๊ะ
       </button>
       <p className="quiet-note">
-        <LockKeyhole size={12} />
+        <LockKeyhole size={14} />
         ส่งอีเมลเฉพาะคนที่มียอดจ่าย โดยไม่รวมเจ้าของบิล
       </p>
     </section>

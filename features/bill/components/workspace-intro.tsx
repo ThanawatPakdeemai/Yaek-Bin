@@ -11,7 +11,7 @@ export function WorkspaceIntro({
         <div>
           <div className="eyebrow">GOOD FOOD, GOOD FRIENDS.</div>
           <h1>
-            มื้อนี้หารกัน ใครจ่ายเท่าไหร่<span>?</span>
+            มื้อนี้หารกัน <span>จ่ายเท่าไหร่?</span>
           </h1>
           <p>เลือกคนที่กินแต่ละเมนู ที่เหลือให้เราช่วยหาร</p>
         </div>

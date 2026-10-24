@@ -57,7 +57,7 @@ export function PaymentSettings({ bill, update, validQR }: Props) {
           <div className="inline-error">ตรวจสอบหมายเลขพร้อมเพย์อีกครั้ง</div>
         ))}
       <div className="payment-note">
-        <QrCode size={22} />
+        <QrCode size={26} />
         <p>
           แต่ละคนจะได้ QR พร้อมยอดของตัวเอง
           <small>
