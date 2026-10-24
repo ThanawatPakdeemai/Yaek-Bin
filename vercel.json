@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev"
+  "buildCommand": "bun run build",
+  "devCommand": "bun run dev"
 }

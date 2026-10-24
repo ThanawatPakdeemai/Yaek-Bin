@@ -1,0 +1,134 @@
+/* friends: base styles, responsive rules, and readability overrides. */
+.friend-labels {
+  display: grid;
+  grid-template-columns: 42% 58%;
+  padding-left: 44px;
+  font-size: 12px;
+  color: #9aa498;
+  margin-bottom: 8px;
+}
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.friend-row {
+  display: grid;
+  grid-template-columns: 32px minmax(85px, 1fr) minmax(160px, 1.4fr) 25px;
+  gap: 10px;
+  align-items: center;
+}
+.friend-name {
+  position: relative;
+  min-width: 0;
+}
+.friend-name input {
+  font-size: 13px;
+  padding: 10px;
+}
+.friend-name:has(.owner-label) input {
+  padding-right: 64px;
+}
+.owner-label {
+  position: absolute;
+  right: 7px;
+  top: 12px;
+  font-size: 9px;
+  color: #709176;
+  background: #eff5ea;
+  padding: 2px 5px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.email-input {
+  position: relative;
+}
+.email-input > svg {
+  position: absolute;
+  left: 10px;
+  top: 13px;
+  color: #aab3a7;
+}
+.email-input input {
+  padding: 10px 7px 10px 30px;
+  font-size: 11px;
+}
+@media (max-width: 1000px) {
+  .friend-row {
+    grid-template-columns: 28px minmax(68px, 1fr) minmax(125px, 1.2fr) 23px;
+    gap: 7px;
+  }
+  .friend-row .avatar {
+    width: 28px;
+    height: 28px;
+  }
+  .owner-label {
+    display: none;
+  }
+  .friend-name:has(.owner-label) input {
+    padding-right: 10px;
+  }
+  .email-input input {
+    font-size: 10px;
+  }
+}
+@media (max-width: 800px) {
+  .friend-row {
+    grid-template-columns: 32px minmax(90px, 1fr) minmax(180px, 1.5fr) 28px;
+    gap: 10px;
+  }
+  .friend-row .avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .email-input input {
+    font-size: 12px;
+  }
+}
+@media (max-width: 520px) {
+  .friend-labels {
+    display: none;
+  }
+  .friend-list {
+    gap: 14px;
+  }
+  .friend-row {
+    grid-template-columns: 30px minmax(0, 1fr) 28px;
+    gap: 7px 9px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid #f0f3eb;
+  }
+  .friend-name {
+    grid-column: 2;
+  }
+  .friend-row .delete {
+    grid-row: 1;
+    grid-column: 3;
+  }
+  .email-input {
+    grid-row: 2;
+    grid-column: 2/4;
+  }
+  .email-input input {
+    padding-left: 31px;
+    font-size: 15px !important;
+  }
+  .email-input svg {
+    top: 13px;
+  }
+  .friend-name input {
+    padding: 9px 10px;
+    font-size: 15px !important;
+  }
+  .owner-label {
+    display: block;
+    font-size: 9px;
+    top: 12px;
+  }
+  .friend-name:has(.owner-label) input {
+    padding-right: 65px;
+  }
+}
+.friend-labels {
+  color: #778574;
+}

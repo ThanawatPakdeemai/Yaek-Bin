@@ -1,16 +1,116 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {cents,calculate,exampleBill,splitCents,promptpayId,sendingErrors} from '../lib/bill';
-import {paymentPayload,paymentQR} from '../lib/qr';
-import {emailParameters,emailPreview} from '../lib/email';
-import {PNG} from 'pngjs';
-import jsQR from 'jsqr';
-test('price input is exact cents, rejects negative, exponent, NaN and 3 decimal digits',()=>{assert.equal(cents('0.29'),29);assert.equal(cents('100.1'),10010);for(const value of ['-1','1e3','NaN','0.001',''])assert.equal(cents(value),null)});
-test('bill shares only selected eaters, keeps owner separate from collection',()=>{const b=exampleBill();const c=calculate(b);assert.equal(c.total,62000);assert.deepEqual(c.people.map(p=>p.total),[13500,13500,21500,13500]);assert.equal(c.collect,48500);assert.equal(c.ownerAmount,13500);assert.equal(c.errors.length,0)});
-test('100 baht divided by 3 preserves every satang deterministically',()=>{assert.deepEqual(splitCents(10000,['a','b','c']),{a:3334,b:3333,c:3333})});
-test('discount, service, VAT allocations sum exactly, including many fractional cases',()=>{for(let n=1;n<100;n++){const b=exampleBill();b.items[0].price=`${n}.01`;b.discount='12.37';b.serviceRate='10';b.vatRate='7';const c=calculate(b);assert.equal(c.people.reduce((s,p)=>s+p.total,0),c.total);assert.equal(c.people.reduce((s,p)=>s+p.discount,0),c.discount);assert.equal(c.people.reduce((s,p)=>s+p.service,0),c.service);assert.equal(c.people.reduce((s,p)=>s+p.vat,0),c.vat);assert.ok(c.people.every(p=>p.total>=0));}});
-test('unassigned dishes, invalid numbers and stale ids block sending',()=>{const b=exampleBill();b.items[0].people=[];b.items[1].people=['not-a-person'];b.items[2].quantity=-1;b.discount='9999999';assert.ok(calculate(b).errors.length>=4);assert.ok(sendingErrors(b).length>0)});
-test('full discount results in zero service and VAT',()=>{const b=exampleBill();b.discount='620';b.serviceRate='10';b.vatRate='7';const c=calculate(b);assert.equal(c.total,0);assert.ok(c.people.every(p=>p.total===0))});
-test('PromptPay rejects invalid identifier and amount',()=>{assert.equal(promptpayId('081-234-5678'),'0812345678');assert.equal(promptpayId('abc0812345678'),null);assert.equal(promptpayId('0000000000000'),null);assert.equal(promptpayId('1234567890123'),null);assert.throws(()=>paymentPayload('0812345678',0));assert.throws(()=>paymentPayload('0812345678',12.3))});
-test('generated PNG decodes to the PromptPay payload, contains precise amount and phone',async()=>{const payload=paymentPayload('0812345678',13501);assert.ok(payload.includes('0066812345678'));assert.ok(payload.includes('5406135.01'));const png=PNG.sync.read(Buffer.from((await paymentQR('0812345678',13501)).split(',')[1],'base64'));const result=jsQR(new Uint8ClampedArray(png.data),png.width,png.height);assert.equal(result?.data,payload)});
-test('email parameters isolate recipient and preview escapes untrusted names',()=>{const b=exampleBill();b.friends[1].name='<img src=x onerror=alert(1)>';b.promptpay='0812345678';const p=calculate(b).people[1];const params=emailParameters(b,p,'data:image/png;base64,test');assert.equal(params.items.length,3);assert.equal(params.total_amount,'135.00');const html=emailPreview(params);assert.ok(!html.includes('<img src=x'));assert.ok(html.includes('&lt;img'));assert.ok(!html.includes('นัท'));assert.ok(!html.includes('ไก่ทอด'));});
+import test from "node:test";
+import assert from "node:assert/strict";
+import { cents } from "@/shared/lib/money";
+import { calculate, splitCents } from "@/features/bill/model/calculate";
+import { exampleBill } from "@/features/bill/model/draft";
+import { promptpayId } from "@/features/payments/lib/promptpay";
+import { sendingErrors } from "@/features/bill/model/validation";
+import { paymentPayload, paymentQR } from "@/features/payments/lib/qr";
+import {
+  emailParameters,
+  emailPreview,
+} from "@/features/bill-email/lib/email-template";
+import { PNG } from "pngjs";
+import jsQR from "jsqr";
+test("price input is exact cents, rejects negative, exponent, NaN and 3 decimal digits", () => {
+  assert.equal(cents("0.29"), 29);
+  assert.equal(cents("100.1"), 10010);
+  for (const value of ["-1", "1e3", "NaN", "0.001", ""])
+    assert.equal(cents(value), null);
+});
+test("bill shares only selected eaters, keeps owner separate from collection", () => {
+  const b = exampleBill();
+  const c = calculate(b);
+  assert.equal(c.total, 62000);
+  assert.deepEqual(
+    c.people.map((p) => p.total),
+    [13500, 13500, 21500, 13500],
+  );
+  assert.equal(c.collect, 48500);
+  assert.equal(c.ownerAmount, 13500);
+  assert.equal(c.errors.length, 0);
+});
+test("100 baht divided by 3 preserves every satang deterministically", () => {
+  assert.deepEqual(splitCents(10000, ["a", "b", "c"]), {
+    a: 3334,
+    b: 3333,
+    c: 3333,
+  });
+});
+test("discount, service, VAT allocations sum exactly, including many fractional cases", () => {
+  for (let n = 1; n < 100; n++) {
+    const b = exampleBill();
+    b.items[0].price = `${n}.01`;
+    b.discount = "12.37";
+    b.serviceRate = "10";
+    b.vatRate = "7";
+    const c = calculate(b);
+    assert.equal(
+      c.people.reduce((s, p) => s + p.total, 0),
+      c.total,
+    );
+    assert.equal(
+      c.people.reduce((s, p) => s + p.discount, 0),
+      c.discount,
+    );
+    assert.equal(
+      c.people.reduce((s, p) => s + p.service, 0),
+      c.service,
+    );
+    assert.equal(
+      c.people.reduce((s, p) => s + p.vat, 0),
+      c.vat,
+    );
+    assert.ok(c.people.every((p) => p.total >= 0));
+  }
+});
+test("unassigned dishes, invalid numbers and stale ids block sending", () => {
+  const b = exampleBill();
+  b.items[0].people = [];
+  b.items[1].people = ["not-a-person"];
+  b.items[2].quantity = -1;
+  b.discount = "9999999";
+  assert.ok(calculate(b).errors.length >= 4);
+  assert.ok(sendingErrors(b).length > 0);
+});
+test("full discount results in zero service and VAT", () => {
+  const b = exampleBill();
+  b.discount = "620";
+  b.serviceRate = "10";
+  b.vatRate = "7";
+  const c = calculate(b);
+  assert.equal(c.total, 0);
+  assert.ok(c.people.every((p) => p.total === 0));
+});
+test("PromptPay rejects invalid identifier and amount", () => {
+  assert.equal(promptpayId("081-234-5678"), "0812345678");
+  assert.equal(promptpayId("abc0812345678"), null);
+  assert.equal(promptpayId("0000000000000"), null);
+  assert.equal(promptpayId("1234567890123"), null);
+  assert.throws(() => paymentPayload("0812345678", 0));
+  assert.throws(() => paymentPayload("0812345678", 12.3));
+});
+test("generated PNG decodes to the PromptPay payload, contains precise amount and phone", async () => {
+  const payload = paymentPayload("0812345678", 13501);
+  assert.ok(payload.includes("0066812345678"));
+  assert.ok(payload.includes("5406135.01"));
+  const png = PNG.sync.read(
+    Buffer.from((await paymentQR("0812345678", 13501)).split(",")[1], "base64"),
+  );
+  const result = jsQR(new Uint8ClampedArray(png.data), png.width, png.height);
+  assert.equal(result?.data, payload);
+});
+test("email parameters isolate recipient and preview escapes untrusted names", () => {
+  const b = exampleBill();
+  b.friends[1].name = "<img src=x onerror=alert(1)>";
+  b.promptpay = "0812345678";
+  const p = calculate(b).people[1];
+  const params = emailParameters(b, p, "data:image/png;base64,test");
+  assert.equal(params.items.length, 3);
+  assert.equal(params.total_amount, "135.00");
+  const html = emailPreview(params);
+  assert.ok(!html.includes("<img src=x"));
+  assert.ok(html.includes("&lt;img"));
+  assert.ok(!html.includes("นัท"));
+  assert.ok(!html.includes("ไก่ทอด"));
+});

@@ -1,0 +1,247 @@
+/* summary: base styles, responsive rules, and readability overrides. */
+.summary-column {
+  position: sticky;
+  top: 24px;
+}
+.summary-card {
+  padding: 23px;
+}
+.summary-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #5c795e;
+}
+.summary-title h2 {
+  font-size: 15px;
+  font-weight: 600;
+}
+.summary-title > span {
+  font-family: Inter;
+  font-size: 9px;
+  margin-left: auto;
+  background: #f2f6ee;
+  color: #96a591;
+  padding: 4px 5px;
+  border-radius: 4px;
+  letter-spacing: 0.8px;
+}
+.grand-total {
+  text-align: center;
+  background: #edf4e8;
+  border-radius: 12px;
+  padding: 24px 8px 20px;
+  margin: 19px 0;
+}
+.grand-total > span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #85a077;
+}
+.grand-total strong {
+  display: block;
+  font-family: Inter;
+  font-size: 41px;
+  font-weight: 600;
+  letter-spacing: -1.8px;
+  color: #476c3b;
+  line-height: 1.4;
+  margin: 4px 0 8px;
+}
+.grand-total strong small {
+  font-size: 24px;
+  font-weight: 400;
+  margin-right: 4px;
+}
+.grand-total p {
+  font-size: 12px;
+  color: #91a685;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.grand-total i {
+  width: 3px;
+  height: 3px;
+  background: #b5c3a9;
+  border-radius: 50%;
+}
+.summary-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  padding: 0 1px;
+}
+.summary-breakdown > div {
+  display: flex;
+  justify-content: space-between;
+  color: #929f8b;
+}
+.summary-breakdown b {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6f8367;
+}
+.dashed-separator {
+  border-bottom: 1px dashed #dee6d6;
+  margin: 19px 0;
+}
+.person-totals-title {
+  font-size: 14px;
+  color: #658059;
+  font-weight: 500;
+  margin-bottom: 9px;
+}
+.person-totals {
+  display: flex;
+  flex-direction: column;
+}
+.person-total {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f3eb;
+  text-align: left;
+}
+.person-total:hover .person-total-name {
+  color: var(--green);
+}
+.person-total-name {
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.person-total-name small {
+  display: block;
+  font-size: 12px;
+  color: #a7b09e;
+  font-weight: 400;
+  margin-top: 4px;
+}
+.person-total strong {
+  font-family: Inter;
+  font-size: 14px;
+  color: #526f47;
+  font-weight: 600;
+}
+.person-total > svg {
+  color: #adb9a3;
+}
+.collect-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 21px 0;
+  color: #628153;
+}
+.collect-total span {
+  font-size: 14px;
+  font-weight: 500;
+}
+.collect-total small {
+  display: block;
+  font-size: 12px;
+  color: #a1af94;
+  margin-top: 5px;
+}
+.collect-total strong {
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+.copy-button {
+  width: 100%;
+  font-size: 12px;
+  padding: 9px;
+}
+.rounding-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11px;
+  color: #a9b29f;
+  line-height: 1.9;
+  margin-top: 15px;
+}
+.rounding-note svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+@media (min-width: 1300px) {
+  .summary-card {
+    padding: 25px;
+  }
+}
+@media (max-width: 1000px) {
+  .summary-card {
+    padding: 20px;
+  }
+  .grand-total strong {
+    font-size: 36px;
+  }
+}
+@media (max-width: 800px) {
+  .summary-column {
+    position: static;
+  }
+  /* Match the shared card padding that followed this rule before extraction. */
+  .summary-card {
+    padding: 23px;
+  }
+  .grand-total {
+    padding: 20px;
+  }
+  .person-total {
+    padding: 14px 0;
+  }
+  .person-total-name {
+    font-size: 15px;
+  }
+  .person-total-name small {
+    font-size: 12px;
+  }
+  .person-total strong {
+    font-size: 15px;
+  }
+  .person-totals-title {
+    font-size: 14px;
+  }
+  .collect-total strong {
+    font-size: 21px;
+  }
+  .summary-breakdown {
+    font-size: 13px;
+  }
+  .summary-column .rounding-note {
+    font-size: 11px;
+  }
+  .grand-total strong {
+    font-size: 43px;
+  }
+}
+@media (max-width: 520px) {
+  .grand-total strong {
+    font-size: 43px;
+  }
+  .summary-card {
+    padding: 21px;
+  }
+}
+.rounding-note,
+.summary-breakdown > div,
+.person-total-name small {
+  color: #778574;
+}
+.collect-total small,
+.grand-total p {
+  color: #7b8d6f;
+}
