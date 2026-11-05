@@ -1,4 +1,8 @@
 import test from "node:test";
+import { readFileSync } from "node:fs";
+import { PNG } from "pngjs";
+import jsQR from "jsqr";
+import { paymentPayload } from "@/features/payments/lib/qr";
 import assert from "node:assert/strict";
 import { handleSend } from "@/features/bill-email/server/send-bill";
 import { exampleBill } from "@/features/bill/model/draft";
@@ -64,6 +68,15 @@ test("server recomputes recipient amount, attaches generated QR, keeps private k
   assert.equal(sent.template_params.total_amount, "135.00");
   assert.equal(sent.template_params.to_email, "person1@example.com");
   assert.ok(sent.template_params.qr_image.startsWith("data:image/png;base64,"));
+  // Verify the actual attachment is scannable and matches the billed amount.
+  const png = PNG.sync.read(
+    Buffer.from(sent.template_params.qr_image.split(",")[1], "base64"),
+  );
+  const decoded = jsQR(new Uint8ClampedArray(png.data), png.width, png.height);
+  assert.equal(decoded?.data, paymentPayload(b.promptpay, 13500));
+  const template = readFileSync("email-templates/bill-email.html", "utf8");
+  assert.ok(template.includes('src="cid:qr_image"'));
+  assert.equal(sent.template_params.email, sent.template_params.to_email);
   assert.equal(sent.accessToken, "test-private");
   assert.ok(!(await r.text()).includes("test-private"));
   const second = await handleSend(req(b), config, fake as typeof fetch);
@@ -119,4 +132,25 @@ test("uncertain delivery is blocked until organizer explicitly verifies provider
     200,
   );
   assert.equal(calls, 1);
+});
+
+test("provider errors return a response and preserve safe retry behavior", async (t) => {
+  const realNow = Date.now();
+  let elapsed = 20000;
+  t.mock.method(Date, "now", () => realNow + elapsed);
+  for (const status of [400, 429, 500]) {
+    elapsed += 2000;
+    const b = bill();
+    const fake = async () => new Response("Provider error", { status });
+    const response = await handleSend(req(b), config, fake as typeof fetch);
+    assert.equal(response.status, 502);
+    assert.equal(
+      ((await response.json()) as { code: string }).code,
+      status >= 500 ? "UNCERTAIN" : "REJECTED",
+    );
+    elapsed += 2000;
+    const success = async () => new Response("OK");
+    const retry = await handleSend(req(b), config, success as typeof fetch);
+    assert.equal(retry.status, status >= 500 ? 409 : 200);
+  }
 });
