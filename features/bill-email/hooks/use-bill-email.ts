@@ -26,6 +26,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
   const [outcomes, setOutcomes] = useState<Record<string, Outcome>>({});
   const [activeFingerprint, setActiveFingerprint] = useState("");
   const sendLock = useRef(false);
+
   useEffect(() => {
     fetch("/api/email-status")
       .then((r) => {
@@ -37,6 +38,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       )
       .catch(() => setEmailReady(false));
   }, []);
+
   const openReview = async () => {
     if (!bill) return;
     const problems = sendingErrors(bill);
@@ -51,14 +53,18 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       );
       return;
     }
+
     const digest = await crypto.subtle.digest(
       "SHA-256",
       new TextEncoder().encode(JSON.stringify(bill)),
     );
+
     const fp = [...new Uint8Array(digest)]
       .map((n) => n.toString(16).padStart(2, "0"))
       .join("");
+
     setActiveFingerprint(fp);
+
     try {
       const existing = JSON.parse(
         localStorage.getItem("han-kan-send-" + fp) || "{}",
@@ -79,9 +85,11 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
     } catch {
       setOutcomes({});
     }
+
     setConfirmed(false);
     onReview();
   };
+
   const setResult = (id: string, value: Outcome) =>
     setOutcomes((prev) => {
       const next = { ...prev, [id]: value };
@@ -93,7 +101,15 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       } catch {}
       return next;
     });
+
   const sendBills = async () => {
+    console.log("test-bill", bill);
+    console.log("test-calc", calc);
+    console.log("test-confirmed", confirmed);
+    console.log("test-emailReady", emailReady);
+    console.log("test-access", access);
+    console.log("test-sendLock", sendLock);
+
     if (
       !bill ||
       !calc ||
@@ -101,20 +117,28 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       !emailReady ||
       !access ||
       sendLock.current
-    )
+    ) {
       return;
+    }
     sendLock.current = true;
     setSending(true);
     const recipients = calc.people.filter(
       (p) => p.friend.id !== bill.ownerId && p.total > 0,
     );
+
+    console.log("test-recipients", recipients);
+    console.log("test-outcomes", outcomes);
+
     for (const p of recipients) {
       if (
         outcomes[p.friend.id]?.state === "accepted" ||
         outcomes[p.friend.id]?.state === "uncertain"
-      )
+      ) {
         continue;
+      }
+
       setResult(p.friend.id, { state: "sending" });
+
       try {
         const r = await fetch("/api/send-bill", {
           method: "POST",
@@ -134,9 +158,13 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
           code?: string;
           error?: string;
         };
-        if (r.ok && result.accepted)
+        console.log("test-case-0", result, r);
+        if (r.ok && result.accepted) {
+          console.log("test-case-1", result);
           setResult(p.friend.id, { state: "accepted" });
-        else {
+        } else {
+          //NOTE - if the request fails
+          console.log("test-case-2", result);
           setResult(p.friend.id, {
             state: result.code === "UNCERTAIN" ? "uncertain" : "failed",
             message: result.error || "ส่งไม่สำเร็จ",
@@ -144,6 +172,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
           if (r.status === 401 || r.status === 503 || r.status === 429) break;
         }
       } catch {
+        console.log("test-case-3");
         setResult(p.friend.id, {
           state: "uncertain",
           message: "ยืนยันผลไม่ได้ ตรวจสอบ EmailJS History ก่อนส่งซ้ำ",
