@@ -282,47 +282,47 @@ export async function handleSend(
     throw new Error("Missing EmailJS environment variables");
   }
 
-  // try {
-  //   const TEMPLATE_PARAMS = {
-  //     owner_name: ownerBill.friend.name,
-  //     owner_email: ownerBill.friend.email,
-  //     subject: bill.title,
-  //     email: person.friend.email,
-  //     note: bill.note || "",
-  //     bill_date: bill.date,
-  //     bill_title: bill.title,
-  //     to_name: person.friend.name,
-  //     qr_code: qr,
-  //     items: person.lines.map((item) => ({
-  //       name: item.name,
-  //       line_total: item.lineTotal,
-  //       quantity: item.quantity,
-  //       headcount: item.headcount,
-  //       share: money(item.amount),
-  //     })),
-  //     discount: money(person.discount),
-  //     subtotal: money(person.base),
-  //     service: money(person.service),
-  //     vat: money(person.vat),
-  //     total_amount: money(person.total),
-  //     promptpay_id: bill.promptpay,
-  //   };
+  try {
+    const TEMPLATE_PARAMS = {
+      owner_name: ownerBill.friend.name,
+      owner_email: ownerBill.friend.email,
+      subject: bill.title,
+      email: person.friend.email,
+      note: bill.note || "",
+      bill_date: bill.date,
+      bill_title: bill.title,
+      to_name: person.friend.name,
+      qr_code: qr,
+      items: person.lines.map((item) => ({
+        name: item.name,
+        line_total: item.lineTotal,
+        quantity: item.quantity,
+        headcount: item.headcount,
+        share: money(item.amount),
+      })),
+      discount: money(person.discount),
+      subtotal: money(person.base),
+      service: money(person.service),
+      vat: money(person.vat),
+      total_amount: money(person.total),
+      promptpay_id: bill.promptpay,
+    };
 
-  //   const response = await emailjs.send(
-  //     EMAILJS_SERVICE_ID,
-  //     EMAILJS_TEMPLATE_ID,
-  //     TEMPLATE_PARAMS,
-  //     {
-  //       publicKey: EMAILJS_PUBLIC_KEY,
-  //       privateKey: EMAILJS_PRIVATEKEY,
-  //     },
-  //   );
-  //   console.log("test-EMAILJS RESPONSE", response);
-  //   if (response.status === 200) {
-  //     results.set(key, { state: "accepted", expires: Date.now() + 86400000 });
-  //     return json({ accepted: true });
-  //   }
-  // } catch (error) {
-  //   console.log("test-EMAILJS error", error);
-  // }
+    const response = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID,
+      TEMPLATE_PARAMS,
+      {
+        publicKey: EMAILJS_PUBLIC_KEY,
+        privateKey: EMAILJS_PRIVATEKEY,
+      },
+    );
+    console.log("test-EMAILJS RESPONSE", response);
+    if (response.status === 200) {
+      results.set(key, { state: "accepted", expires: Date.now() + 86400000 });
+      return json({ accepted: true });
+    }
+  } catch (error) {
+    console.log("test-EMAILJS error", error);
+  }
 }
