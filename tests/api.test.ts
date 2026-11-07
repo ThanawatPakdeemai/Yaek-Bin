@@ -65,6 +65,12 @@ test("server recomputes recipient amount, attaches generated QR, keeps private k
   assert.equal(sent.template_params.to_email, "person1@example.com");
   assert.ok(sent.template_params.qr_image.startsWith("data:image/png;base64,"));
   assert.equal(sent.accessToken, "test-private");
+  assert.equal(sent.service_id, config.EMAILJS_SERVICE_ID);
+  assert.equal(sent.template_id, config.EMAILJS_TEMPLATE_ID);
+  assert.equal(sent.user_id, config.EMAILJS_PUBLIC_KEY);
+  assert.equal(sent.template_params.email, sent.template_params.to_email);
+  assert.equal(sent.template_params.qr_code, sent.template_params.qr_image);
+  assert.equal(sent.template_params.subject, b.title);
   assert.ok(!(await r.text()).includes("test-private"));
   const second = await handleSend(req(b), config, fake as typeof fetch);
   assert.equal(
@@ -119,4 +125,73 @@ test("uncertain delivery is blocked until organizer explicitly verifies provider
     200,
   );
   assert.equal(calls, 1);
+});
+
+test("provider rejection allows retry while provider server errors block duplicate sends", async (t) => {
+  let now = Date.now() + 20000;
+  t.mock.method(Date, "now", () => now);
+
+  for (const status of [400, 429, 500]) {
+    now += 5000;
+    const b = bill();
+    let calls = 0;
+    const fake = async () => {
+      calls++;
+      return new Response("Provider error", { status });
+    };
+    const first = await handleSend(req(b), config, fake as typeof fetch);
+    assert.equal(first.status, 502);
+    assert.equal(
+      (await first.json()).code,
+      status >= 500 ? "UNCERTAIN" : "REJECTED",
+    );
+
+    now += 5000;
+    const retry = await handleSend(req(b), config, fake as typeof fetch);
+    assert.equal(retry.status, status >= 500 ? 409 : 502);
+    assert.equal(calls, status >= 500 ? 1 : 2);
+  }
+});
+
+test("simultaneous duplicate requests send once and distinct bills are rate limited", async (t) => {
+  const now = Date.now() + 100000;
+  t.mock.method(Date, "now", () => now);
+  const b = bill();
+  let calls = 0;
+  const fake = async () => {
+    calls++;
+    return new Response("OK");
+  };
+  const responses = await Promise.all([
+    handleSend(req(b), config, fake as typeof fetch),
+    handleSend(req(b), config, fake as typeof fetch),
+  ]);
+  assert.equal(calls, 1);
+  assert.ok(responses.some((r) => r.status === 200));
+  assert.ok(responses.every((r) => r.status === 200 || r.status === 409));
+
+  const limited = await handleSend(req(), config, fake as typeof fetch);
+  assert.equal(limited.status, 429);
+  assert.equal((await limited.json()).code, "RATE_LIMIT");
+  assert.equal(calls, 1);
+});
+
+test("malformed JSON and empty recipients are rejected before contacting EmailJS", async () => {
+  let calls = 0;
+  const fake = async () => {
+    calls++;
+    return new Response("OK");
+  };
+  for (const body of ["{", JSON.stringify({ bill: bill(), recipientId: "" })]) {
+    const request = new Request("https://app.example/api/send-bill", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${config.BILL_ACCESS_CODE}`,
+      },
+      body,
+    });
+    assert.equal((await handleSend(request, config, fake as typeof fetch)).status, 400);
+  }
+  assert.equal(calls, 0);
 });

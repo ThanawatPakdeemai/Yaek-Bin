@@ -7,6 +7,11 @@ export function emailParameters(bill: Bill, person: PersonTotal, qr: string) {
   const owner = bill.friends.find((p) => p.id === bill.ownerId)!;
   return {
     to_email: person.friend.email.trim(),
+    // Keep aliases used by existing EmailJS templates alongside the preview fields.
+    email: person.friend.email.trim(),
+    subject: bill.title,
+    owner_email: emailValid(owner.email) ? owner.email.trim() : "",
+    qr_code: qr,
     to_name: person.friend.name,
     bill_title: bill.title,
     bill_date: bill.date,

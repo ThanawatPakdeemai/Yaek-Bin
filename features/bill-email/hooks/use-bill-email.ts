@@ -103,12 +103,6 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
     });
 
   const sendBills = async () => {
-    console.log("test-bill", bill);
-    console.log("test-calc", calc);
-    console.log("test-confirmed", confirmed);
-    console.log("test-emailReady", emailReady);
-    console.log("test-access", access);
-    console.log("test-sendLock", sendLock);
 
     if (
       !bill ||
@@ -126,64 +120,59 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       (p) => p.friend.id !== bill.ownerId && p.total > 0,
     );
 
-    console.log("test-recipients", recipients);
-    console.log("test-outcomes", outcomes);
-
-    for (const p of recipients) {
-      if (
-        outcomes[p.friend.id]?.state === "accepted" ||
-        outcomes[p.friend.id]?.state === "uncertain"
-      ) {
-        continue;
-      }
-
-      setResult(p.friend.id, { state: "sending" });
-
-      try {
-        const r = await fetch("/api/send-bill", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access}`,
-          },
-          body: JSON.stringify({
-            bill,
-            recipientId: p.friend.id,
-            retryUncertain: outcomes[p.friend.id]?.retryUncertain || false,
-          }),
-          signal: AbortSignal.timeout(25000),
-        });
-        const result = (await r.json()) as {
-          accepted?: boolean;
-          code?: string;
-          error?: string;
-        };
-        console.log("test-case-0", result, r);
-        if (r.ok && result.accepted) {
-          console.log("test-case-1", result);
-          setResult(p.friend.id, { state: "accepted" });
-        } else {
-          //NOTE - if the request fails
-          console.log("test-case-2", result);
-          setResult(p.friend.id, {
-            state: result.code === "UNCERTAIN" ? "uncertain" : "failed",
-            message: result.error || "ส่งไม่สำเร็จ",
-          });
-          if (r.status === 401 || r.status === 503 || r.status === 429) break;
+    try {
+      for (const p of recipients) {
+        if (
+          outcomes[p.friend.id]?.state === "accepted" ||
+          outcomes[p.friend.id]?.state === "uncertain"
+        ) {
+          continue;
         }
-      } catch {
-        console.log("test-case-3");
-        setResult(p.friend.id, {
-          state: "uncertain",
-          message: "ยืนยันผลไม่ได้ ตรวจสอบ EmailJS History ก่อนส่งซ้ำ",
-        });
-        break;
+
+        setResult(p.friend.id, { state: "sending" });
+
+        try {
+          const r = await fetch("/api/send-bill", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access}`,
+            },
+            body: JSON.stringify({
+              bill,
+              recipientId: p.friend.id,
+              retryUncertain: outcomes[p.friend.id]?.retryUncertain || false,
+            }),
+            signal: AbortSignal.timeout(25000),
+          });
+          const result = (await r.json()) as {
+            accepted?: boolean;
+            code?: string;
+            error?: string;
+          };
+          if (r.ok && result.accepted) {
+            setResult(p.friend.id, { state: "accepted" });
+          } else {
+            setResult(p.friend.id, {
+              state: result.code === "UNCERTAIN" ? "uncertain" : "failed",
+              message: result.error || "ส่งไม่สำเร็จ",
+            });
+            if (r.status === 401 || r.status === 503 || r.status === 429) break;
+          }
+        } catch {
+          setResult(p.friend.id, {
+            state: "uncertain",
+            message: "ยืนยันผลไม่ได้ ตรวจสอบ EmailJS History ก่อนส่งซ้ำ",
+          });
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1200));
       }
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+    } finally {
+      setSending(false);
+      sendLock.current = false;
+      setAccess("");
     }
-    setSending(false);
-    sendLock.current = false;
-    setAccess("");
   };
   return {
     emailReady,
