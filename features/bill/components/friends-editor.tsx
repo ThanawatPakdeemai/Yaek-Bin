@@ -46,6 +46,7 @@ export function FriendsEditor({
             <div className="email-input">
               <Mail size={14} />
               <input
+                autoComplete="true"
                 type="email"
                 aria-label={`อีเมลของ ${friend.name || "เพื่อน"}`}
                 placeholder={

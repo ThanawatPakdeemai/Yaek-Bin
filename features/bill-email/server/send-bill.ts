@@ -28,6 +28,16 @@ export function configReady(config: Config) {
   );
 }
 
+const RESULT_TTL_MS = 24 * 60 * 60 * 1000;
+const SEND_INTERVAL_MS = 1200;
+const SEND_TIMEOUT_MS = 18000;
+
+const sendSchema = z.object({
+  bill: billSchema,
+  recipientId: z.string().min(1).max(80),
+  retryUncertain: z.boolean().optional(),
+});
+
 const json = (data: unknown, status = 200) =>
   Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
 
@@ -57,6 +67,7 @@ export async function handleSend(
 ): Promise<Response> {
   if (request.method !== "POST")
     return json({ error: "Method not allowed" }, 405);
+
   if (!configReady(config))
     return json(
       {
@@ -65,9 +76,11 @@ export async function handleSend(
       },
       503,
     );
+
   const origin = request.headers.get("origin");
   if (origin && origin !== new URL(request.url).origin)
     return json({ error: "ไม่อนุญาตต้นทางนี้" }, 403);
+
   const supplied =
     request.headers.get("authorization")?.replace(/^Bearer /, "") || "";
   if (
@@ -76,40 +89,51 @@ export async function handleSend(
     (await digest(supplied)) !== (await digest(config.BILL_ACCESS_CODE))
   )
     return json({ error: "รหัสส่งบิลไม่ถูกต้อง", code: "UNAUTHORIZED" }, 401);
+
   if (!request.headers.get("content-type")?.includes("application/json"))
     return json({ error: "รูปแบบคำขอไม่ถูกต้อง" }, 415);
-  const text = await request.text();
+
+  let text: string;
+  try {
+    text = await request.text();
+  } catch {
+    return json({ error: "อ่านข้อมูลบิลไม่สำเร็จ" }, 400);
+  }
   if (new TextEncoder().encode(text).length > 100000)
     return json({ error: "ข้อมูลบิลมีขนาดใหญ่เกินไป" }, 413);
+
   let input: unknown;
   try {
     input = JSON.parse(text);
   } catch {
     return json({ error: "ข้อมูลบิลไม่ถูกต้อง" }, 400);
   }
-  const parsed = z
-    .object({
-      bill: billSchema,
-      recipientId: z.string().max(80),
-      retryUncertain: z.boolean().optional(),
-    })
-    .safeParse(input);
-  if (!parsed.success)
+
+  const parsed = sendSchema.safeParse(input);
+
+  if (!parsed.success) {
     return json({ error: "ข้อมูลบิลไม่ครบหรือไม่ถูกต้อง" }, 400);
+  }
+
   const { bill, recipientId, retryUncertain } = parsed.data;
   const errors = sendingErrors(bill);
+
   if (errors.length) return json({ error: errors[0] }, 400);
   const person = calculate(bill).people.find(
     (p) => p.friend.id === recipientId,
   );
+
   if (!person || person.friend.id === bill.ownerId || person.total <= 0)
     return json({ error: "ไม่พบผู้รับที่มียอดเรียกเก็บ" }, 400);
   const key = await digest(JSON.stringify({ bill, recipientId }));
   const now = Date.now();
+
   for (const [k, v] of results) if (v.expires < now) results.delete(k);
   const previous = results.get(key);
+
   if (previous?.state === "accepted")
     return json({ accepted: true, duplicate: true });
+
   if (previous && !(previous.state === "uncertain" && retryUncertain))
     return json(
       {
@@ -119,19 +143,24 @@ export async function handleSend(
       },
       409,
     );
+
   if (now < nextAllowed)
     return json(
       { error: "กรุณารอ 2 วินาทีก่อนส่งรายการถัดไป", code: "RATE_LIMIT" },
       429,
     );
-  nextAllowed = now + 1100;
+
+  // Reserve the send before QR generation yields so concurrent requests cannot
+  // send the same bill twice or bypass the provider's rate limit.
+  nextAllowed = now + SEND_INTERVAL_MS;
+  results.set(key, { state: "sending", expires: now + RESULT_TTL_MS });
   let qr: string;
   try {
     qr = await paymentQR(bill.promptpay, person.total);
   } catch {
+    results.delete(key);
     return json({ error: "สร้าง QR ไม่สำเร็จ กรุณาตรวจสอบพร้อมเพย์" }, 400);
   }
-  results.set(key, { state: "sending", expires: now + 86400000 });
   try {
     const response = await sendFetch(
       "https://api.emailjs.com/api/v1.0/email/send",
@@ -145,15 +174,15 @@ export async function handleSend(
           accessToken: config.EMAILJS_PRIVATEKEY,
           template_params: emailParameters(bill, person, qr),
         }),
-        signal: AbortSignal.timeout(18000),
+        signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
       },
     );
     if (response.ok) {
-      results.set(key, { state: "accepted", expires: Date.now() + 86400000 });
+      results.set(key, { state: "accepted", expires: Date.now() + RESULT_TTL_MS });
       return json({ accepted: true });
     }
     if (response.status >= 500) {
-      results.set(key, { state: "uncertain", expires: Date.now() + 86400000 });
+      results.set(key, { state: "uncertain", expires: Date.now() + RESULT_TTL_MS });
       return json(
         {
           error:
@@ -170,7 +199,7 @@ export async function handleSend(
         : "EmailJS ไม่รับคำขอ ตรวจสอบ Service, Template, คีย์, การอนุญาตส่งจากเซิร์ฟเวอร์ และสิทธิ์แนบไฟล์";
     return json({ error: message, code: "REJECTED" }, 502);
   } catch {
-    results.set(key, { state: "uncertain", expires: Date.now() + 86400000 });
+    results.set(key, { state: "uncertain", expires: Date.now() + RESULT_TTL_MS });
     return json(
       {
         error:

@@ -166,6 +166,31 @@
   font-size: 11px;
   white-space: nowrap;
 }
+.bill-access-input {
+  position: relative;
+}
+.bill-access-input input {
+  padding-right: 48px;
+}
+.bill-access-toggle {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #7d8d70;
+}
+.bill-access-toggle:hover:not(:disabled) {
+  background: #edf1e7;
+  color: #4c733f;
+}
 .confirm-check {
   display: flex;
   align-items: flex-start;
