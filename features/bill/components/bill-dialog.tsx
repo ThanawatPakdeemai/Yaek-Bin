@@ -11,6 +11,7 @@ import { HelpContent } from "@/features/bill/components/help-content";
 export function BillDialog({ workspace }: { workspace: BillWorkspace }) {
   const { modal, setModal, sending, person } = workspace;
   const dialog = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
     if (modal) {
       dialog.current?.showModal();
@@ -23,6 +24,7 @@ export function BillDialog({ workspace }: { workspace: BillWorkspace }) {
       document.body.style.overflow = "";
     };
   }, [modal]);
+
   return (
     <dialog
       ref={dialog}

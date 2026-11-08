@@ -13,7 +13,7 @@ export function paymentPayload(target: string, amount: number) {
 export async function paymentQR(target: string, amount: number) {
   return QRCode.toDataURL(paymentPayload(target, amount), {
     width: 360,
-    margin: 4,
+    margin: 2,
     errorCorrectionLevel: "M",
     color: { dark: "#152a28", light: "#ffffff" },
   });

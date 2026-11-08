@@ -1,4 +1,7 @@
+"use client";
+
 import "../styles/bill-email.css";
+import { useState } from "react";
 import type { BillEmail } from "../hooks/use-bill-email";
 import type { BillCalculation } from "@/features/bill/model/calculate";
 import type { Bill, Friend } from "@/features/bill/model/types";
@@ -9,6 +12,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Send,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Field } from "@/shared/ui/field";
 import { money } from "@/shared/lib/money";
@@ -48,6 +53,16 @@ export function ReviewBill({
   sendBills,
   showEmail,
 }: Props) {
+  const [showPassword, setShowPassword] = useState(false);
+  // console.log("test-ReviewBill-bill", bill);
+  // console.log("test-ReviewBill-calc", calc);
+  // console.log("test-ReviewBill-owner", owner);
+  // console.log("test-ReviewBill-outcomes", outcomes);
+  // console.log("test-ReviewBill-emailReady", emailReady);
+  // console.log("test-ReviewBill-access", access);
+  // console.log("test-ReviewBill-confirmed", confirmed);
+  // console.log("test-ReviewBill-sending", sending);
+
   const recipients = calc.people.filter(
     (p) => p.friend.id !== bill.ownerId && p.total > 0,
   );
@@ -57,6 +72,11 @@ export function ReviewBill({
   const accepted = recipients.filter(
     (p) => outcomes[p.friend.id]?.state === "accepted",
   ).length;
+
+  // console.log("test-ReviewBill-recipients", recipients);
+  // console.log("test-ReviewBill-remaining", remaining);
+  // console.log("test-ReviewBill-accepted", accepted);
+
   return (
     <div className="modal-body">
       <div className="review-overview">
@@ -102,6 +122,7 @@ export function ReviewBill({
                 ) : outcomes[p.friend.id].state === "accepted" ? (
                   <>
                     <CheckCircle2 size={14} />
+                    {/* FIXME */}
                     EmailJS รับคำขอแล้ว
                   </>
                 ) : (
@@ -126,6 +147,7 @@ export function ReviewBill({
                   })
                 }
               >
+                {/* FIXME */}
                 ฉันตรวจ EmailJS History แล้วว่าไม่ส่ง → อนุญาตให้ลองใหม่
               </button>
             )}
@@ -149,9 +171,10 @@ export function ReviewBill({
         <p className="inline-success">
           <CheckCircle2 size={16} />
           รับคำขอแล้ว {accepted}/{recipients.length} ฉบับ ·
-          ระบบจะไม่ส่งซ้ำให้คนที่สำเร็จในบิลฉบับนี้
+          ระบบจะไม่ส่งอีเมลซ้ำให้คนที่ส่งสำเร็จในบิลฉบับนี้
         </p>
       )}
+      {/* FIXME */}
       {recipients.some((p) => outcomes[p.friend.id]?.state === "uncertain") && (
         <p className="uncertain-note">
           มีรายการที่ยืนยันผลไม่ได้ ระบบหยุดส่งซ้ำอัตโนมัติ กรุณาตรวจสอบ EmailJS
@@ -164,15 +187,32 @@ export function ReviewBill({
             label="รหัสส่งบิลของเจ้าของเว็บ"
             hint="ใช้รหัสที่ตั้งไว้บนเซิร์ฟเวอร์ รหัสนี้จะไม่บันทึกลงเบราว์เซอร์"
           >
-            <input
-              type="password"
-              autoComplete="off"
-              value={access}
-              maxLength={256}
-              disabled={sending}
-              onChange={(e) => setAccess(e.target.value)}
-              placeholder="กรอกรหัสเพื่อยืนยันการส่ง"
-            />
+            <div className="bill-access-input">
+              <input
+                type={showPassword ? "text" : "password"}
+                autoComplete="off"
+                value={access}
+                maxLength={256}
+                disabled={sending}
+                onChange={(e) => setAccess(e.target.value)}
+                placeholder="กรอกรหัสเพื่อยืนยันการส่ง"
+              />
+              <button
+                type="button"
+                className="bill-access-toggle"
+                disabled={sending}
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "ซ่อนรหัสส่งบิล" : "แสดงรหัสส่งบิล"}
+                aria-pressed={showPassword}
+                title={showPassword ? "ซ่อนรหัสส่งบิล" : "แสดงรหัสส่งบิล"}
+              >
+                {showPassword ? (
+                  <EyeOff size={18} aria-hidden="true" />
+                ) : (
+                  <Eye size={18} aria-hidden="true" />
+                )}
+              </button>
+            </div>
           </Field>
           <label className="confirm-check">
             <input
@@ -221,6 +261,7 @@ export function ReviewBill({
           )}
         </button>
       </div>
+      {/* FIXME  */}
       <p className="quiet-note">
         สถานะ “รับคำขอแล้ว” หมายถึง EmailJS รับส่งต่อ
         ไม่ใช่การยืนยันว่าเพื่อนเปิดอ่านหรือโอนเงินแล้ว

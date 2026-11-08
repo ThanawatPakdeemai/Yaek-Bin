@@ -26,6 +26,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
   const [outcomes, setOutcomes] = useState<Record<string, Outcome>>({});
   const [activeFingerprint, setActiveFingerprint] = useState("");
   const sendLock = useRef(false);
+
   useEffect(() => {
     fetch("/api/email-status")
       .then((r) => {
@@ -37,6 +38,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       )
       .catch(() => setEmailReady(false));
   }, []);
+
   const openReview = async () => {
     if (!bill) return;
     const problems = sendingErrors(bill);
@@ -51,14 +53,18 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       );
       return;
     }
+
     const digest = await crypto.subtle.digest(
       "SHA-256",
       new TextEncoder().encode(JSON.stringify(bill)),
     );
+
     const fp = [...new Uint8Array(digest)]
       .map((n) => n.toString(16).padStart(2, "0"))
       .join("");
+
     setActiveFingerprint(fp);
+
     try {
       const existing = JSON.parse(
         localStorage.getItem("han-kan-send-" + fp) || "{}",
@@ -79,9 +85,11 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
     } catch {
       setOutcomes({});
     }
+
     setConfirmed(false);
     onReview();
   };
+
   const setResult = (id: string, value: Outcome) =>
     setOutcomes((prev) => {
       const next = { ...prev, [id]: value };
@@ -93,7 +101,9 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       } catch {}
       return next;
     });
+
   const sendBills = async () => {
+
     if (
       !bill ||
       !calc ||
@@ -101,60 +111,68 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
       !emailReady ||
       !access ||
       sendLock.current
-    )
+    ) {
       return;
+    }
     sendLock.current = true;
     setSending(true);
     const recipients = calc.people.filter(
       (p) => p.friend.id !== bill.ownerId && p.total > 0,
     );
-    for (const p of recipients) {
-      if (
-        outcomes[p.friend.id]?.state === "accepted" ||
-        outcomes[p.friend.id]?.state === "uncertain"
-      )
-        continue;
-      setResult(p.friend.id, { state: "sending" });
-      try {
-        const r = await fetch("/api/send-bill", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access}`,
-          },
-          body: JSON.stringify({
-            bill,
-            recipientId: p.friend.id,
-            retryUncertain: outcomes[p.friend.id]?.retryUncertain || false,
-          }),
-          signal: AbortSignal.timeout(25000),
-        });
-        const result = (await r.json()) as {
-          accepted?: boolean;
-          code?: string;
-          error?: string;
-        };
-        if (r.ok && result.accepted)
-          setResult(p.friend.id, { state: "accepted" });
-        else {
-          setResult(p.friend.id, {
-            state: result.code === "UNCERTAIN" ? "uncertain" : "failed",
-            message: result.error || "ส่งไม่สำเร็จ",
-          });
-          if (r.status === 401 || r.status === 503 || r.status === 429) break;
+
+    try {
+      for (const p of recipients) {
+        if (
+          outcomes[p.friend.id]?.state === "accepted" ||
+          outcomes[p.friend.id]?.state === "uncertain"
+        ) {
+          continue;
         }
-      } catch {
-        setResult(p.friend.id, {
-          state: "uncertain",
-          message: "ยืนยันผลไม่ได้ ตรวจสอบ EmailJS History ก่อนส่งซ้ำ",
-        });
-        break;
+
+        setResult(p.friend.id, { state: "sending" });
+
+        try {
+          const r = await fetch("/api/send-bill", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${access}`,
+            },
+            body: JSON.stringify({
+              bill,
+              recipientId: p.friend.id,
+              retryUncertain: outcomes[p.friend.id]?.retryUncertain || false,
+            }),
+            signal: AbortSignal.timeout(25000),
+          });
+          const result = (await r.json()) as {
+            accepted?: boolean;
+            code?: string;
+            error?: string;
+          };
+          if (r.ok && result.accepted) {
+            setResult(p.friend.id, { state: "accepted" });
+          } else {
+            setResult(p.friend.id, {
+              state: result.code === "UNCERTAIN" ? "uncertain" : "failed",
+              message: result.error || "ส่งไม่สำเร็จ",
+            });
+            if (r.status === 401 || r.status === 503 || r.status === 429) break;
+          }
+        } catch {
+          setResult(p.friend.id, {
+            state: "uncertain",
+            message: "ยืนยันผลไม่ได้ ตรวจสอบ EmailJS History ก่อนส่งซ้ำ",
+          });
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1200));
       }
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+    } finally {
+      setSending(false);
+      sendLock.current = false;
+      setAccess("");
     }
-    setSending(false);
-    sendLock.current = false;
-    setAccess("");
   };
   return {
     emailReady,
