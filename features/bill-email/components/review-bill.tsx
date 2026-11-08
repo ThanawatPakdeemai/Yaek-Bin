@@ -184,7 +184,7 @@ export function ReviewBill({
       {remaining.length > 0 && (
         <>
           <Field
-            label="รหัสส่งบิลของเจ้าของเว็บ"
+            label="รหัสส่งบิลของเจ้าของเว็บ - boynarak-yaekbin"
             hint="ใช้รหัสที่ตั้งไว้บนเซิร์ฟเวอร์ รหัสนี้จะไม่บันทึกลงเบราว์เซอร์"
           >
             <div className="bill-access-input">

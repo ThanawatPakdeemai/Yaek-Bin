@@ -28,22 +28,6 @@ bun run start
 4. Deploy / Redeploy หลังตั้ง env
 5. สร้างบิลทดสอบโดยใช้อีเมลของคุณเอง แล้วกดเรียกเก็บ ตรวจ EmailJS History และกล่องอีเมลว่ารายการ ยอด และภาพ QR ครบก่อนใช้กับเพื่อน
 
-## Environment Variables
-
-ทุกตัวอ่านเฉพาะเซิร์ฟเวอร์ ห้ามเติม NEXT*PUBLIC* หรือ VITE\_ หน้าชื่อ และห้ามใส่คีย์ลงในหน้า React
-
-| ชื่อ                | ค่า                                                                     |
-| ------------------- | ----------------------------------------------------------------------- |
-| EMAILJS_PRIVATEKEY  | Private Key ของบัญชี EmailJS                                            |
-| EMAILJS_PUBLIC_KEY  | Public Key ของบัญชี EmailJS                                             |
-| EMAILJS_SERVICE_ID  | Service ID ที่เชื่อมอีเมลผู้ส่งแล้ว                                     |
-| EMAILJS_TEMPLATE_ID | Template ID ที่ตั้งค่าตามหัวข้อถัดไป                                    |
-| BILL_ACCESS_CODE    | รหัสลับยาวอย่างน้อย 16 ตัวอักษรสำหรับเจ้าของเว็บ ใช้กรอกตอนยืนยันส่งบิล |
-
-สร้างรหัสส่งบิลสุ่มบนเครื่องของคุณ เช่น `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"` แล้วนำผลไปใส่เฉพาะ env บน Vercel ห้าม commit รหัส
-
-BILL_ACCESS_CODE ป้องกันบุคคลทั่วไปเรียก API ส่งบิลโดยไม่ได้รับอนุญาต แม้เว็บบน Vercel จะเปิดสาธารณะ ใช้รหัสเฉพาะเว็บนี้ และไม่แชร์กับผู้ไม่เกี่ยวข้อง ทุก env มีตัวอย่างว่างใน `.env.example` โดย `.gitignore` กัน `.env*` และอนุญาตเฉพาะ `.env.example`
-
 ## ตั้งค่า EmailJS แบบทีละขั้น
 
 ### 1. เชื่อมอีเมลผู้ส่ง
