@@ -163,9 +163,7 @@ export async function handleSend(
     results.delete(key);
     return json({ error: "สร้าง QR ไม่สำเร็จ กรุณาตรวจสอบพร้อมเพย์" }, 400);
   }
-  console.log("test-bill", bill);
-  console.log("test-person", person);
-  console.log("test-calc-total", calculate(bill).total);
+
   try {
     const response = await sendFetch(
       "https://api.emailjs.com/api/v1.0/email/send",
@@ -177,13 +175,7 @@ export async function handleSend(
           template_id: config.EMAILJS_TEMPLATE_ID,
           user_id: config.EMAILJS_PUBLIC_KEY,
           accessToken: config.EMAILJS_PRIVATEKEY,
-          template_params: emailParameters(
-            bill,
-            person,
-            qr,
-            // calc,
-            // calculate(bill).total,
-          ),
+          template_params: emailParameters(bill, person, qr),
         }),
         signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
       },

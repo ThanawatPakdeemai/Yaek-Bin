@@ -36,25 +36,18 @@ export function emailParameters(bill: Bill, person: PersonTotal, qr: string) {
     })),
     friend_count: bill.friends.length,
     sum_total_amount: money(calculate(bill).total),
-    owner_subtotal: money(
-      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)?.base ||
-        0,
+    all_subtotal: money(
+      calculate(bill).people.reduce((sum, p) => sum + p.base, 0),
     ),
-    owner_discount: money(
-      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)
-        ?.discount || 0,
+    all_discount: money(
+      calculate(bill).people.reduce((sum, p) => sum + p.discount, 0),
     ),
-    owner_service: money(
-      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)
-        ?.service || 0,
+    all_service: money(
+      calculate(bill).people.reduce((sum, p) => sum + p.service, 0),
     ),
-    owner_vat: money(
-      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)?.vat ||
-        0,
-    ),
-    owner_total_amount: money(
-      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)?.total ||
-        0,
+    all_vat: money(calculate(bill).people.reduce((sum, p) => sum + p.vat, 0)),
+    all_total_amount: money(
+      calculate(bill).people.reduce((sum, p) => sum + p.total, 0),
     ),
     subtotal: money(person.base),
     discount: money(person.discount),
