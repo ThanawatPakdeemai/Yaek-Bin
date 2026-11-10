@@ -153,7 +153,7 @@ export function ItemsEditor({
         <span>ค่าอาหารทั้งหมด</span>
         <strong>฿{money(calc.subtotal)}</strong>
       </div>
-      <details className="extras">
+      <details open className="extras">
         <summary>
           ส่วนลด ค่าบริการ และภาษี <ChevronDown size={16} />
         </summary>

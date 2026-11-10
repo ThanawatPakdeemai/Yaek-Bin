@@ -191,7 +191,10 @@ test("malformed JSON and empty recipients are rejected before contacting EmailJS
       },
       body,
     });
-    assert.equal((await handleSend(request, config, fake as typeof fetch)).status, 400);
+    assert.equal(
+      (await handleSend(request, config, fake as typeof fetch)).status,
+      400,
+    );
   }
   assert.equal(calls, 0);
 });
