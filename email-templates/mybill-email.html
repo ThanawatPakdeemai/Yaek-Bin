@@ -45,7 +45,8 @@
             {{bill_title}}
           </h1>
           <p style="font-size: 14px; line-height: 1.8">
-            สวัสดี {{owner_name}}<br />ส่งสรุปยอดค่าอาหารทั้งหมดมาให้คุณแล้ว
+            สวัสดี {{owner_name}}<br />แยกบิล ·
+            ส่งสรุปยอดค่าอาหารทั้งหมดของเพื่อนๆ คุณมาให้แล้ว
           </p>
           <table
             role="presentation"
@@ -59,10 +60,10 @@
                 </p>
                 <strong
                   style="font-size: 34px; line-height: 1.4; color: #276d57"
-                  >฿{{total_amount}}</strong
+                  >฿{{sum_total_amount}}</strong
                 >
                 <p style="margin: 12px 0 0; font-size: 12px; color: #63806c">
-                  สรุปค่าอาหารของ {{friend_count}} คน
+                  สรุปค่าอาหารของเพื่อนและคุณทั้งหมด {{friend_count}} คน
                 </p>
               </td>
             </tr>
@@ -126,19 +127,25 @@
           >
             <tr>
               <td style="color: #748179">ค่าอาหาร</td>
-              <td align="right" style="white-space: nowrap">฿{{subtotal}}</td>
+              <td align="right" style="white-space: nowrap">
+                ฿{{owner_subtotal}}
+              </td>
             </tr>
             <tr>
               <td style="color: #748179">ส่วนลด</td>
-              <td align="right" style="white-space: nowrap">−฿{{discount}}</td>
+              <td align="right" style="white-space: nowrap">
+                −฿{{owner_discount}}
+              </td>
             </tr>
             <tr>
               <td style="color: #748179">ค่าบริการ</td>
-              <td align="right" style="white-space: nowrap">฿{{service}}</td>
+              <td align="right" style="white-space: nowrap">
+                ฿{{owner_service}}
+              </td>
             </tr>
             <tr>
               <td style="color: #748179">VAT</td>
-              <td align="right" style="white-space: nowrap">฿{{vat}}</td>
+              <td align="right" style="white-space: nowrap">฿{{owner_vat}}</td>
             </tr>
             <tr style="font-weight: bold">
               <td style="padding-top: 8px; border-top: 1px solid #e3e8e2">
@@ -152,7 +159,7 @@
                   white-space: nowrap;
                 "
               >
-                ฿{{total_amount}}
+                ฿{{owner_total_amount}}
               </td>
             </tr>
           </table>

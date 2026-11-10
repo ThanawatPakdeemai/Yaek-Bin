@@ -1,15 +1,16 @@
 import { Bill, PersonTotal } from "@/features/bill/model/types";
 import { money } from "@/shared/lib/money";
 import { emailValid } from "@/shared/lib/email";
+import { calculate } from "@/features/bill/model/calculate";
 
 // Build email parameters only from validated server-side bill data.
 export function emailParameters(bill: Bill, person: PersonTotal, qr: string) {
   const owner = bill.friends.find((p) => p.id === bill.ownerId)!;
+
   return {
     to_email: person.friend.email.trim(),
     subject: bill.title,
     owner_email: emailValid(owner.email) ? owner.email.trim() : "",
-    qr_code: qr,
     to_name: person.friend.name,
     bill_title: bill.title,
     bill_date: bill.date,
@@ -25,6 +26,36 @@ export function emailParameters(bill: Bill, person: PersonTotal, qr: string) {
       line_total: money(l.lineTotal),
       share: money(l.amount),
     })),
+    friends: bill.friends.map((f) => ({
+      name: f.name,
+      email: f.email,
+      total_amount:
+        money(
+          calculate(bill).people.find((p) => p.friend.id === f.id)?.total || 0,
+        ) || "ไม่พบข้อมูล",
+    })),
+    friend_count: bill.friends.length,
+    sum_total_amount: money(calculate(bill).total),
+    owner_subtotal: money(
+      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)?.base ||
+        0,
+    ),
+    owner_discount: money(
+      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)
+        ?.discount || 0,
+    ),
+    owner_service: money(
+      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)
+        ?.service || 0,
+    ),
+    owner_vat: money(
+      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)?.vat ||
+        0,
+    ),
+    owner_total_amount: money(
+      calculate(bill).people.find((p) => p.friend.id === bill.ownerId)?.total ||
+        0,
+    ),
     subtotal: money(person.base),
     discount: money(person.discount),
     service: money(person.service),
