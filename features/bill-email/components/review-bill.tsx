@@ -54,15 +54,6 @@ export function ReviewBill({
   showEmail,
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
-  // console.log("test-ReviewBill-bill", bill);
-  // console.log("test-ReviewBill-calc", calc);
-  // console.log("test-ReviewBill-owner", owner);
-  // console.log("test-ReviewBill-outcomes", outcomes);
-  // console.log("test-ReviewBill-emailReady", emailReady);
-  // console.log("test-ReviewBill-access", access);
-  // console.log("test-ReviewBill-confirmed", confirmed);
-  // console.log("test-ReviewBill-sending", sending);
-
   const recipients = calc.people.filter(
     (p) => p.friend.id !== bill.ownerId && p.total > 0,
   );
@@ -72,10 +63,6 @@ export function ReviewBill({
   const accepted = recipients.filter(
     (p) => outcomes[p.friend.id]?.state === "accepted",
   ).length;
-
-  // console.log("test-ReviewBill-recipients", recipients);
-  // console.log("test-ReviewBill-remaining", remaining);
-  // console.log("test-ReviewBill-accepted", accepted);
 
   return (
     <div className="modal-body">
@@ -184,7 +171,7 @@ export function ReviewBill({
       {remaining.length > 0 && (
         <>
           <Field
-            label="รหัสส่งบิลของเจ้าของเว็บ - boynarak-yaekbin"
+            label="รหัสส่งบิลของเจ้าของเว็บ"
             hint="ใช้รหัสที่ตั้งไว้บนเซิร์ฟเวอร์ รหัสนี้จะไม่บันทึกลงเบราว์เซอร์"
           >
             <div className="bill-access-input">

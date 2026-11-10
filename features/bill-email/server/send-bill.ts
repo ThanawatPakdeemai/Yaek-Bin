@@ -115,6 +115,8 @@ export async function handleSend(
     return json({ error: "ข้อมูลบิลไม่ครบหรือไม่ถูกต้อง" }, 400);
   }
 
+  console.log("test-parsed", parsed.data);
+
   const { bill, recipientId, retryUncertain } = parsed.data;
   const errors = sendingErrors(bill);
 
@@ -161,6 +163,7 @@ export async function handleSend(
     results.delete(key);
     return json({ error: "สร้าง QR ไม่สำเร็จ กรุณาตรวจสอบพร้อมเพย์" }, 400);
   }
+
   try {
     const response = await sendFetch(
       "https://api.emailjs.com/api/v1.0/email/send",
@@ -178,11 +181,17 @@ export async function handleSend(
       },
     );
     if (response.ok) {
-      results.set(key, { state: "accepted", expires: Date.now() + RESULT_TTL_MS });
+      results.set(key, {
+        state: "accepted",
+        expires: Date.now() + RESULT_TTL_MS,
+      });
       return json({ accepted: true });
     }
     if (response.status >= 500) {
-      results.set(key, { state: "uncertain", expires: Date.now() + RESULT_TTL_MS });
+      results.set(key, {
+        state: "uncertain",
+        expires: Date.now() + RESULT_TTL_MS,
+      });
       return json(
         {
           error:
@@ -199,7 +208,10 @@ export async function handleSend(
         : "EmailJS ไม่รับคำขอ ตรวจสอบ Service, Template, คีย์, การอนุญาตส่งจากเซิร์ฟเวอร์ และสิทธิ์แนบไฟล์";
     return json({ error: message, code: "REJECTED" }, 502);
   } catch {
-    results.set(key, { state: "uncertain", expires: Date.now() + RESULT_TTL_MS });
+    results.set(key, {
+      state: "uncertain",
+      expires: Date.now() + RESULT_TTL_MS,
+    });
     return json(
       {
         error:
