@@ -51,7 +51,7 @@ export function FriendsEditor({
                 aria-label={`อีเมลของ ${friend.name || "เพื่อน"}`}
                 placeholder={
                   friend.id === bill.ownerId
-                    ? "อีเมลตอบกลับ (ไม่บังคับ)"
+                    ? "อีเมลสำหรับรับสรุปบิล"
                     : "friend@email.com"
                 }
                 value={friend.email}
@@ -81,7 +81,7 @@ export function FriendsEditor({
       </button>
       <p className="quiet-note">
         <LockKeyhole size={14} />
-        ส่งอีเมลเฉพาะคนที่มียอดจ่าย โดยไม่รวมเจ้าของบิล
+        ส่งบิลให้เพื่อนที่มียอดจ่าย และส่งสรุปยอดทุกคนให้เจ้าของบิล
       </p>
     </section>
   );

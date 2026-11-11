@@ -36,7 +36,7 @@ bun run start
 
 ### 2. สร้าง Template
 
-เปิด HTML/source editor ของ Template แล้ววางเนื้อหาทั้งหมดจาก `email-templates/bill-email.html`
+เปิด HTML/source editor ของ Template แล้ววางเนื้อหาทั้งหมดจาก `email-templates/friendbill-email.html`
 
 ตั้งค่าช่อง:
 
@@ -51,6 +51,14 @@ bun run start
 | CC / BCC        | เว้นว่าง เพื่อไม่เปิดเผยอีเมลของเพื่อนคนอื่น                                                               |
 
 ข้อมูลที่ส่ง: `to_email`, `to_name`, `bill_title`, `bill_date`, `bill_id`, `owner_name`, `reply_to`, `promptpay_id`, `note`, `items[]` (name, quantity, headcount, line_total, share), `subtotal`, `discount`, `service`, `vat`, `total_amount`, `qr_image`
+
+### Template สรุปสำหรับเจ้าของบิล
+
+ใช้ HTML จาก `email-templates/mybill-email.html` กับ Template แยกสำหรับเจ้าของบิล ตั้ง To Email เป็น `{{owner_email}}`, To Name เป็น `{{owner_name}}` และ Subject เป็น `{{subject}}` โดย Template นี้ไม่ต้องแนบ QR
+
+เพิ่ม env `EMAILJS_MY_BILL_TEMPLATE_ID` เป็น ID ของ Template เจ้าของบิล ส่วน `EMAILJS_SERVICE_ID`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATEKEY` และ `BILL_ACCESS_CODE` ใช้ค่าเดิม อีเมลเพื่อนยังใช้ `EMAILJS_FRIEND_BILL_TEMPLATE_ID` ตามเดิม
+
+เมื่อยืนยันส่งเรียกเก็บ ระบบเรียก `/api/send-my-bill` เพื่อส่งสรุปยอดทุกคนให้เจ้าของบิล และ `/api/send-bill` สำหรับเพื่อนแต่ละคน ต้องกรอกอีเมลเจ้าของบิลด้วย สถานะและการลองส่งใหม่แสดงแยกต่อฉบับ โดย API เจ้าของบิลไม่ต้องใช้ `EMAILJS_FRIEND_BILL_TEMPLATE_ID`
 
 ### 3. แนบภาพ QR ให้แสดงในอีเมลจริง
 
@@ -80,7 +88,7 @@ HTML ใช้ `<img src="cid:qr_image">` ซึ่งตรงกับ Paramet
 - เศษสตางค์ของเมนูแจกให้คนตามลำดับในรายชื่อ เช่น 100 ÷ 3 = 33.34, 33.33, 33.33
 - ส่วนลดแบ่งตามสัดส่วนค่าอาหาร; Service คิดหลังหักส่วนลด; VAT คิดหลังรวม Service และกระจายเศษด้วย largest remainder
 - หากราคาในใบเสร็จรวม Service/VAT แล้ว ให้ปล่อยค่าเหล่านี้เป็น 0 เพื่อไม่คิดซ้ำ
-- เจ้าของบิลร่วมรายการอาหารได้ แต่ไม่รับอีเมลเรียกเก็บและไม่รวมในยอดที่เพื่อนโอนคืน
+- เจ้าของบิลร่วมรายการอาหารได้ ได้รับอีเมลสรุปทุกคน และไม่รวมส่วนของตัวเองในยอดที่เพื่อนโอนคืน
 - รองรับ 30 คน / 100 รายการ และยอดรวมไม่เกิน 1,000,000 บาท
 - พร้อมเพย์รองรับมือถือไทย 10 หลัก (06/08/09) หรือเลขบัตรประชาชน 13 หลักที่ผ่าน checksum ต้องลงทะเบียนพร้อมเพย์ไว้แล้ว
 - QR มีทั้งผู้รับและยอดเงินตามมาตรฐาน PromptPay; ตรวจชื่อบัญชีจริงในแอปธนาคารก่อนโอน ตัวเว็บไม่สามารถตรวจสอบชื่อบัญชีหรือยืนยันว่าโอนแล้วได้
@@ -117,7 +125,8 @@ features/
   bill-email/
     components/              # สถานะอีเมล ตรวจบิล และตัวอย่างอีเมล
     hooks/use-bill-email.ts   # readiness, ส่งทีละคน, ป้องกันส่งซ้ำ และ retry
-    lib/email-template.ts    # email parameters และ HTML preview
+    lib/email-friend-template.ts # email parameters ของเพื่อน และ HTML preview
+    lib/email-my-template.ts # email parameters สรุปสำหรับเจ้าของบิล
     server/send-bill.ts      # authorization, validation และเรียก EmailJS
     styles/bill-email.css
 shared/

@@ -6,7 +6,7 @@ const config = {
   EMAILJS_PRIVATEKEY: "test-private",
   EMAILJS_PUBLIC_KEY: "test-public",
   EMAILJS_SERVICE_ID: "test-service",
-  EMAILJS_TEMPLATE_ID: "test-template",
+  EMAILJS_FRIEND_BILL_TEMPLATE_ID: "test-template",
   BILL_ACCESS_CODE: "test-organizer-passphrase",
 };
 function bill() {
@@ -66,10 +66,9 @@ test("server recomputes recipient amount, attaches generated QR, keeps private k
   assert.ok(sent.template_params.qr_image.startsWith("data:image/png;base64,"));
   assert.equal(sent.accessToken, "test-private");
   assert.equal(sent.service_id, config.EMAILJS_SERVICE_ID);
-  assert.equal(sent.template_id, config.EMAILJS_TEMPLATE_ID);
+  assert.equal(sent.template_id, config.EMAILJS_FRIEND_BILL_TEMPLATE_ID);
   assert.equal(sent.user_id, config.EMAILJS_PUBLIC_KEY);
-  assert.equal(sent.template_params.email, sent.template_params.to_email);
-  assert.equal(sent.template_params.qr_code, sent.template_params.qr_image);
+  assert.equal(sent.template_params.to_name, b.friends[1].name);
   assert.equal(sent.template_params.subject, b.title);
   assert.ok(!(await r.text()).includes("test-private"));
   const second = await handleSend(req(b), config, fake as typeof fetch);

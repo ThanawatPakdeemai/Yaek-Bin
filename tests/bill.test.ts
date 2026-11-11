@@ -9,7 +9,7 @@ import { paymentPayload, paymentQR } from "@/features/payments/lib/qr";
 import {
   emailParameters,
   emailPreview,
-} from "@/features/bill-email/lib/email-template";
+} from "@/features/bill-email/lib/email-friend-template";
 import { PNG } from "pngjs";
 import jsQR from "jsqr";
 test("price input is exact cents, rejects negative, exponent, NaN and 3 decimal digits", () => {
