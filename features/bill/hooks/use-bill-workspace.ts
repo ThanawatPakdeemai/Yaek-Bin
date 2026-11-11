@@ -10,7 +10,7 @@ import { paymentQR } from "@/features/payments/lib/qr";
 import {
   emailParameters,
   emailPreview,
-} from "@/features/bill-email/lib/email-template";
+} from "@/features/bill-email/lib/email-friend-template";
 import { useBillDraft } from "./use-bill-draft";
 import { useBillEmail } from "@/features/bill-email/hooks/use-bill-email";
 

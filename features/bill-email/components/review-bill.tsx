@@ -55,7 +55,7 @@ export function ReviewBill({
 }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const recipients = calc.people.filter(
-    (p) => p.friend.id !== bill.ownerId && p.total > 0,
+    (p) => p.friend.id === bill.ownerId || p.total > 0,
   );
   const remaining = recipients.filter(
     (p) => !["accepted", "uncertain"].includes(outcomes[p.friend.id]?.state),
@@ -70,7 +70,7 @@ export function ReviewBill({
         <div>
           <small>{bill.title}</small>
           <strong>฿{money(calc.collect)}</strong>
-          <span>เรียกเก็บจาก {recipients.length} คน</span>
+          <span>เรียกเก็บจาก {recipients.length - 1} คน</span>
         </div>
         <span className="review-owner">
           <QrCode size={20} />
@@ -79,25 +79,32 @@ export function ReviewBill({
         </span>
       </div>
       <p className="review-description">
-        อีเมลแต่ละฉบับมีเฉพาะรายการและยอดของผู้รับคนนั้น พร้อม QR
-        พร้อมเพย์ระบุยอดเงิน
+        อีเมลของเพื่อนแต่ละฉบับมีเฉพาะรายการและยอดของผู้รับคนนั้น พร้อม QR
+        พร้อมเพย์ระบุยอดเงิน และส่งสรุปยอดทุกคนให้เจ้าของบิลอีก 1 ฉบับ
       </p>
       <div className="recipients">
         {recipients.map((p) => (
           <div className="recipient" key={p.friend.id}>
             <div className="recipient-main">
               <div>
-                <b>{p.friend.name}</b>
+                <b>
+                  {p.friend.name}
+                  {p.friend.id === bill.ownerId ? " (เจ้าของบิล)" : ""}
+                </b>
                 <span>{p.friend.email}</span>
               </div>
-              <strong>฿{money(p.total)}</strong>
-              <button
-                className="text-button"
-                disabled={sending}
-                onClick={() => showEmail(p.friend.id)}
-              >
-                ดูอีเมล
-              </button>
+              <strong>
+                ฿{money(p.friend.id === bill.ownerId ? calc.total : p.total)}
+              </strong>
+              {p.friend.id !== bill.ownerId && (
+                <button
+                  className="text-button"
+                  disabled={sending}
+                  onClick={() => showEmail(p.friend.id)}
+                >
+                  ดูอีเมล
+                </button>
+              )}
             </div>
             {outcomes[p.friend.id] && (
               <div className={`send-state ${outcomes[p.friend.id].state}`}>
@@ -243,7 +250,7 @@ export function ReviewBill({
           ) : (
             <>
               <Send size={16} />
-              ส่งเรียกเก็บ {remaining.length} คน
+              ส่งอีเมล {remaining.length} ฉบับ
             </>
           )}
         </button>

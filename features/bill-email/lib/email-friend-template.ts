@@ -10,13 +10,10 @@ export function emailParameters(bill: Bill, person: PersonTotal, qr: string) {
   return {
     to_email: person.friend.email.trim(),
     subject: bill.title,
-    owner_email: emailValid(owner.email) ? owner.email.trim() : "",
     to_name: person.friend.name,
     bill_title: bill.title,
     bill_date: bill.date,
-    bill_id: bill.id,
     owner_name: owner.name,
-    reply_to: emailValid(owner.email) ? owner.email : "",
     promptpay_id: bill.promptpay.replace(/[\s-]/g, ""),
     note: bill.note,
     items: person.lines.map((l) => ({
@@ -26,29 +23,6 @@ export function emailParameters(bill: Bill, person: PersonTotal, qr: string) {
       line_total: money(l.lineTotal),
       share: money(l.amount),
     })),
-    friends: bill.friends.map((f) => ({
-      name: f.name,
-      email: f.email,
-      total_amount:
-        money(
-          calculate(bill).people.find((p) => p.friend.id === f.id)?.total || 0,
-        ) || "ไม่พบข้อมูล",
-    })),
-    friend_count: bill.friends.length,
-    sum_total_amount: money(calculate(bill).total),
-    all_subtotal: money(
-      calculate(bill).people.reduce((sum, p) => sum + p.base, 0),
-    ),
-    all_discount: money(
-      calculate(bill).people.reduce((sum, p) => sum + p.discount, 0),
-    ),
-    all_service: money(
-      calculate(bill).people.reduce((sum, p) => sum + p.service, 0),
-    ),
-    all_vat: money(calculate(bill).people.reduce((sum, p) => sum + p.vat, 0)),
-    all_total_amount: money(
-      calculate(bill).people.reduce((sum, p) => sum + p.total, 0),
-    ),
     subtotal: money(person.base),
     discount: money(person.discount),
     service: money(person.service),

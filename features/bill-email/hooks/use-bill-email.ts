@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { type Bill } from "@/features/bill/model/types";
 import { calculate } from "@/features/bill/model/calculate";
 import { sendingErrors } from "@/features/bill/model/validation";
+import { emailValid } from "@/shared/lib/email";
 
 type Outcome = {
   state: "accepted" | "failed" | "uncertain" | "sending";
@@ -42,6 +43,9 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
   const openReview = async () => {
     if (!bill) return;
     const problems = sendingErrors(bill);
+    const owner = bill.friends.find((friend) => friend.id === bill.ownerId);
+    if (owner && !emailValid(owner.email))
+      problems.push("กรอกอีเมลที่ถูกต้องของเจ้าของบิล");
     if (problems.length) {
       setIssues(problems);
       setTimeout(
@@ -103,7 +107,6 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
     });
 
   const sendBills = async () => {
-
     if (
       !bill ||
       !calc ||
@@ -117,7 +120,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
     sendLock.current = true;
     setSending(true);
     const recipients = calc.people.filter(
-      (p) => p.friend.id !== bill.ownerId && p.total > 0,
+      (p) => p.friend.id === bill.ownerId || p.total > 0,
     );
 
     try {
@@ -132,7 +135,8 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
         setResult(p.friend.id, { state: "sending" });
 
         try {
-          const r = await fetch("/api/send-bill", {
+          const endpoint = p.friend.id === bill.ownerId ? "/api/send-my-bill" : "/api/send-bill";
+          const r = await fetch(endpoint, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -140,7 +144,7 @@ export function useBillEmail({ bill, calc, setIssues, onReview }: Options) {
             },
             body: JSON.stringify({
               bill,
-              recipientId: p.friend.id,
+              recipientId: p.friend.id === bill.ownerId ? undefined : p.friend.id,
               retryUncertain: outcomes[p.friend.id]?.retryUncertain || false,
             }),
             signal: AbortSignal.timeout(25000),
