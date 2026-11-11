@@ -2,28 +2,44 @@ import { z } from "zod";
 import { billSchema } from "@/features/bill/model/schemas";
 import { calculate } from "@/features/bill/model/calculate";
 import { sendingErrors } from "@/features/bill/model/validation";
-import { emailParameters } from "@/features/bill-email/lib/email-template";
+import { emailParameters } from "@/features/bill-email/lib/email-friend-template";
+import { myEmailParameters } from "@/features/bill-email/lib/email-my-template";
+import { emailValid } from "@/shared/lib/email";
 import { paymentQR } from "@/features/payments/lib/qr";
 
 export const ENV_NAMES = [
   "EMAILJS_PRIVATEKEY",
   "EMAILJS_PUBLIC_KEY",
   "EMAILJS_SERVICE_ID",
-  "EMAILJS_TEMPLATE_ID",
+  "EMAILJS_FRIEND_BILL_TEMPLATE_ID",
   "BILL_ACCESS_CODE",
 ] as const;
 
-type Config = Record<(typeof ENV_NAMES)[number], string>;
+type Config = Record<
+  Exclude<(typeof ENV_NAMES)[number], "EMAILJS_FRIEND_BILL_TEMPLATE_ID">,
+  string
+> & {
+  EMAILJS_FRIEND_BILL_TEMPLATE_ID?: string;
+  EMAILJS_MY_BILL_TEMPLATE_ID?: string;
+};
+type EmailKind = "friend" | "owner";
 
 export function emailConfig() {
   return Object.fromEntries(
-    ENV_NAMES.map((k) => [k, process.env[k] || ""]),
+    [...ENV_NAMES, "EMAILJS_MY_BILL_TEMPLATE_ID"].map((k) => [k, process.env[k] || ""]),
   ) as Config;
 }
 
-export function configReady(config: Config) {
+export function configReady(config: Config, kind: EmailKind = "friend") {
   return (
-    ENV_NAMES.every((k) => Boolean(config[k])) &&
+    ENV_NAMES.filter((k) => k !== "EMAILJS_FRIEND_BILL_TEMPLATE_ID").every(
+      (k) => Boolean(config[k]),
+    ) &&
+    Boolean(
+      kind === "owner"
+        ? config.EMAILJS_MY_BILL_TEMPLATE_ID
+        : config.EMAILJS_FRIEND_BILL_TEMPLATE_ID,
+    ) &&
     config.BILL_ACCESS_CODE.length >= 16
   );
 }
@@ -37,6 +53,16 @@ const sendSchema = z.object({
   recipientId: z.string().min(1).max(80),
   retryUncertain: z.boolean().optional(),
 });
+
+const sendMySchema = sendSchema.omit({ recipientId: true });
+
+export function handleSendMyBill(
+  request: Request,
+  config = emailConfig(),
+  sendFetch: typeof fetch = fetch,
+) {
+  return handleSend(request, config, sendFetch, "owner");
+}
 
 const json = (data: unknown, status = 200) =>
   Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
@@ -64,11 +90,12 @@ export async function handleSend(
   request: Request,
   config = emailConfig(),
   sendFetch: typeof fetch = fetch,
+  kind: EmailKind = "friend",
 ): Promise<Response> {
   if (request.method !== "POST")
     return json({ error: "Method not allowed" }, 405);
 
-  if (!configReady(config))
+  if (!configReady(config, kind))
     return json(
       {
         error: "ยังไม่ได้ตั้งค่าระบบอีเมลและรหัสส่งบิลบนเซิร์ฟเวอร์",
@@ -109,15 +136,14 @@ export async function handleSend(
     return json({ error: "ข้อมูลบิลไม่ถูกต้อง" }, 400);
   }
 
-  const parsed = sendSchema.safeParse(input);
+  const parsed = (kind === "owner" ? sendMySchema : sendSchema).safeParse(input);
 
   if (!parsed.success) {
     return json({ error: "ข้อมูลบิลไม่ครบหรือไม่ถูกต้อง" }, 400);
   }
 
-  console.log("test-parsed", parsed.data);
-
-  const { bill, recipientId, retryUncertain } = parsed.data;
+  const { bill, retryUncertain } = parsed.data;
+  const recipientId = "recipientId" in parsed.data ? parsed.data.recipientId : bill.ownerId;
   const errors = sendingErrors(bill);
 
   if (errors.length) return json({ error: errors[0] }, 400);
@@ -125,9 +151,14 @@ export async function handleSend(
     (p) => p.friend.id === recipientId,
   );
 
-  if (!person || person.friend.id === bill.ownerId || person.total <= 0)
+  if (kind === "owner") {
+    if (!person || !emailValid(person.friend.email))
+      return json({ error: "กรอกอีเมลที่ถูกต้องของเจ้าของบิล" }, 400);
+  } else if (!person || person.friend.id === bill.ownerId || person.total <= 0) {
     return json({ error: "ไม่พบผู้รับที่มียอดเรียกเก็บ" }, 400);
-  const key = await digest(JSON.stringify({ bill, recipientId }));
+  }
+  if (!person) return json({ error: "ไม่พบเจ้าของบิล" }, 400);
+  const key = await digest(JSON.stringify({ kind, bill, recipientId }));
   const now = Date.now();
 
   for (const [k, v] of results) if (v.expires < now) results.delete(k);
@@ -158,7 +189,7 @@ export async function handleSend(
   results.set(key, { state: "sending", expires: now + RESULT_TTL_MS });
   let qr: string;
   try {
-    qr = await paymentQR(bill.promptpay, person.total);
+    qr = kind === "friend" ? await paymentQR(bill.promptpay, person.total) : "";
   } catch {
     results.delete(key);
     return json({ error: "สร้าง QR ไม่สำเร็จ กรุณาตรวจสอบพร้อมเพย์" }, 400);
@@ -172,10 +203,14 @@ export async function handleSend(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           service_id: config.EMAILJS_SERVICE_ID,
-          template_id: config.EMAILJS_TEMPLATE_ID,
+          template_id: kind === "owner"
+            ? config.EMAILJS_MY_BILL_TEMPLATE_ID
+            : config.EMAILJS_FRIEND_BILL_TEMPLATE_ID,
           user_id: config.EMAILJS_PUBLIC_KEY,
           accessToken: config.EMAILJS_PRIVATEKEY,
-          template_params: emailParameters(bill, person, qr),
+          template_params: kind === "owner"
+            ? myEmailParameters(bill)
+            : emailParameters(bill, person, qr),
         }),
         signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
       },
