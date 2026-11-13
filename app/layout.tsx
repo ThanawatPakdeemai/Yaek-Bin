@@ -1,9 +1,26 @@
 import type { Metadata } from "next";
 import "./globals.css";
+
+const title = "หารกัน — หารค่าอาหารกับเพื่อน พร้อม QR พร้อมเพย์";
+const description =
+  "หารค่าอาหารตามคนที่กิน สรุปยอดรายคน สร้าง QR พร้อมเพย์ และส่งบิลผ่านอีเมล";
+
 export const metadata: Metadata = {
-  title: "หารกัน — อิ่มด้วยกัน จ่ายส่วนของเรา",
-  description:
-    "หารค่าอาหารตามคนที่กิน สรุปยอดรายคน สร้าง QR พร้อมเพย์ และส่งบิลผ่านอีเมล",
+  title,
+  description,
+  applicationName: "หารกัน",
+  openGraph: {
+    type: "website",
+    locale: "th_TH",
+    siteName: "หารกัน",
+    title,
+    description,
+  },
+  twitter: {
+    card: "summary",
+    title,
+    description,
+  },
   icons: { icon: "/favicon.svg" },
 };
 export default function Layout({ children }: { children: React.ReactNode }) {

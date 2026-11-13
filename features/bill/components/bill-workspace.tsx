@@ -19,10 +19,14 @@ export function BillWorkspace() {
   const workspace = useBillWorkspace();
   if (!workspace)
     return (
-      <div className="loading-screen">
-        <span className="brand-symbol">÷</span>
-        <p>กำลังเตรียมโต๊ะให้ทุกคน…</p>
-      </div>
+      <main className="loading-screen">
+        <span className="brand-symbol" aria-hidden="true">
+          ÷
+        </span>
+        <h1>หารกัน — หารค่าอาหารกับเพื่อน</h1>
+        <p>หารตามคนที่กิน สรุปยอดรายคน พร้อม QR พร้อมเพย์และส่งบิลผ่านอีเมล</p>
+        <p role="status">กำลังเตรียมโต๊ะให้ทุกคน…</p>
+      </main>
     );
   const { issues, notice } = workspace;
   return (

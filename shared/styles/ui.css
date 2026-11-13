@@ -40,7 +40,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 7px;
-  color: #859188;
+  color: #606c63;
   flex-shrink: 0;
 }
 .icon-btn:hover:not(:disabled) {
@@ -48,13 +48,13 @@
   color: var(--green);
 }
 .delete:hover:not(:disabled) {
-  color: #b4614c;
+  color: #a4513c;
   background: #fdf0e9;
 }
 .eyebrow {
   font-size: 10px;
   letter-spacing: 1.8px;
-  color: #85978b;
+  color: #5b6d61;
   font-weight: 600;
 }
 .card {
@@ -73,14 +73,14 @@
   min-width: 0;
 }
 .field > span {
-  color: #67796c;
+  color: #5b6d60;
   font-size: 14px;
   font-weight: 500;
 }
 .field > small {
   font-size: 11px;
   line-height: 1.7;
-  color: #95a095;
+  color: #616c61;
   font-weight: 400;
 }
 .section-heading {
@@ -94,7 +94,7 @@
   height: 38px;
   border-radius: 11px;
   background: #f1f5ed;
-  color: #7b977c;
+  color: #547055;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -112,12 +112,12 @@
 .section-heading p {
   font-size: 13px;
   margin-top: 5px;
-  color: #93a092;
+  color: #5f6c5e;
 }
 .count-tag {
   margin-left: auto;
   font-size: 11px;
-  color: #8b998d;
+  color: #5e6c60;
   border: 1px solid var(--line);
   border-radius: 20px;
   padding: 5px 10px;
@@ -141,23 +141,23 @@
 }
 .sage {
   background: #e8eedc;
-  color: #778655;
+  color: #606f3e;
 }
 .peach {
   background: #f8e6db;
-  color: #bc8465;
+  color: #935b3c;
 }
 .purple {
   background: #eee6f3;
-  color: #9c80ac;
+  color: #7a5e8a;
 }
 .blue {
   background: #e0edf4;
-  color: #729bae;
+  color: #456e81;
 }
 .yellow {
   background: #f8eed1;
-  color: #b29e61;
+  color: #7b672a;
 }
 .add-button {
   display: flex;
@@ -167,7 +167,7 @@
   border: 1px dashed #cfdacc;
   border-radius: 8px;
   padding: 12px;
-  color: #6a8870;
+  color: #527058;
   font-size: 12px;
   font-weight: 500;
   gap: 7px;
@@ -179,7 +179,7 @@
   border-color: #7a9b7a;
 }
 .quiet-note {
-  color: #9aa598;
+  color: #616c5f;
   font-size: 12px;
   line-height: 1.8;
   display: flex;
@@ -192,7 +192,7 @@
 }
 .text-button {
   font-size: 11px;
-  color: #6b927a;
+  color: #4a7159;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -204,7 +204,7 @@
 }
 .inline-error {
   font-size: 12px;
-  color: #b1634c;
+  color: #a1533c;
   margin-top: 8px;
   line-height: 1.8;
 }
@@ -212,7 +212,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #668d69;
+  color: #4b724e;
   font-size: 11px;
   line-height: 1.8;
   margin-top: 9px;
@@ -225,7 +225,7 @@
   background: #faf5e9;
   border: 1px solid #eee3c8;
   border-radius: 10px;
-  color: #a99258;
+  color: #7d662c;
   margin: 20px 0;
 }
 .config-note svg {
@@ -324,5 +324,5 @@
 .section-heading p,
 .field > small,
 .quiet-note {
-  color: #778574;
+  color: #5f6d5c;
 }
