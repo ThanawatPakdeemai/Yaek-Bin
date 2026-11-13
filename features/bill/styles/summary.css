@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #5c795e;
+  color: #537055;
 }
 .summary-title h2 {
   font-size: 15px;
@@ -21,7 +21,7 @@
   font-size: 9px;
   margin-left: auto;
   background: #f2f6ee;
-  color: #96a591;
+  color: #5e6d59;
   padding: 4px 5px;
   border-radius: 4px;
   letter-spacing: 0.8px;
@@ -36,7 +36,7 @@
 .grand-total > span {
   font-size: 14px;
   font-weight: 600;
-  color: #85a077;
+  color: #557047;
 }
 .grand-total strong {
   display: block;
@@ -55,7 +55,7 @@
 }
 .grand-total p {
   font-size: 12px;
-  color: #91a685;
+  color: #5a6f4e;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,13 +77,13 @@
 .summary-breakdown > div {
   display: flex;
   justify-content: space-between;
-  color: #929f8b;
+  color: #606d59;
 }
 .summary-breakdown b {
   font-family: Inter;
   font-size: 14px;
   font-weight: 400;
-  color: #6f8367;
+  color: #5a6e52;
 }
 .dashed-separator {
   border-bottom: 1px dashed #dee6d6;
@@ -91,7 +91,7 @@
 }
 .person-totals-title {
   font-size: 14px;
-  color: #658059;
+  color: #557049;
   font-weight: 500;
   margin-bottom: 9px;
 }
@@ -121,7 +121,7 @@
 .person-total-name small {
   display: block;
   font-size: 12px;
-  color: #a7b09e;
+  color: #636c5a;
   font-weight: 400;
   margin-top: 4px;
 }
@@ -132,7 +132,7 @@
   font-weight: 600;
 }
 .person-total > svg {
-  color: #adb9a3;
+  color: #616d57;
 }
 .collect-total {
   display: flex;
@@ -140,7 +140,7 @@
   justify-content: space-between;
   gap: 8px;
   margin: 21px 0;
-  color: #628153;
+  color: #527143;
 }
 .collect-total span {
   font-size: 14px;
@@ -149,7 +149,7 @@
 .collect-total small {
   display: block;
   font-size: 12px;
-  color: #a1af94;
+  color: #5f6d52;
   margin-top: 5px;
 }
 .collect-total strong {
@@ -168,7 +168,7 @@
   align-items: flex-start;
   gap: 6px;
   font-size: 11px;
-  color: #a9b29f;
+  color: #636c59;
   line-height: 1.9;
   margin-top: 15px;
 }
@@ -239,9 +239,9 @@
 .rounding-note,
 .summary-breakdown > div,
 .person-total-name small {
-  color: #778574;
+  color: #5f6d5c;
 }
 .collect-total small,
 .grand-total p {
-  color: #7b8d6f;
+  color: #5c6e50;
 }

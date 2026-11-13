@@ -4,7 +4,7 @@
   grid-template-columns: 42% 58%;
   padding-left: 44px;
   font-size: 12px;
-  color: #9aa498;
+  color: #626c60;
   margin-bottom: 8px;
 }
 .friend-list {
@@ -34,7 +34,7 @@
   right: 7px;
   top: 12px;
   font-size: 9px;
-  color: #709176;
+  color: #507156;
   background: #eff5ea;
   padding: 2px 5px;
   border-radius: 4px;
@@ -47,7 +47,7 @@
   position: absolute;
   left: 10px;
   top: 13px;
-  color: #aab3a7;
+  color: #626b5f;
 }
 .email-input input {
   padding: 10px 7px 10px 30px;
@@ -130,5 +130,5 @@
   }
 }
 .friend-labels {
-  color: #778574;
+  color: #5f6d5c;
 }

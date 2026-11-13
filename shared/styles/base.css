@@ -1,7 +1,7 @@
 /* base: base styles, responsive rules, and readability overrides. */
 :root {
   --ink: #263e36;
-  --muted: #829087;
+  --muted: #59675e;
   --green: #276d57;
   --green-dark: #1e5746;
   --line: #e7ebe5;
@@ -73,7 +73,7 @@ textarea:focus {
 }
 input::placeholder,
 textarea::placeholder {
-  color: #a6afa8;
+  color: #626b64;
 }
 input[aria-invalid="true"] {
   border-color: #c56e58;
