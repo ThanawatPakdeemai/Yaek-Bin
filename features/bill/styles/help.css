@@ -9,7 +9,7 @@
   width: 28px;
   height: 28px;
   background: #edf4e5;
-  color: #819c6f;
+  color: #567144;
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -24,7 +24,7 @@
 .help-content p {
   font-size: 12px;
   line-height: 1.9;
-  color: #869579;
+  color: #5f6e52;
 }
 .privacy-note {
   display: flex;
@@ -35,7 +35,7 @@
 }
 .privacy-note > svg {
   flex-shrink: 0;
-  color: #8da57b;
+  color: #587046;
 }
 @media (max-width: 520px) {
   .help-content p {
